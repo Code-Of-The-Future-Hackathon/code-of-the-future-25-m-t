@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryEntity } from 'src/categories/entities';
+import { CategoryEntity, TypeEntity } from 'src/categories/entities';
 import { UserRoles } from 'src/common';
 import { UserEntity } from 'src/users/entities';
 import { Repository } from 'typeorm';
@@ -15,6 +15,8 @@ export class SeedingService {
     private readonly usersRepository: Repository<UserEntity>,
     @InjectRepository(CategoryEntity)
     private readonly categoriesRepository: Repository<CategoryEntity>,
+    @InjectRepository(TypeEntity)
+    private readonly typesRepository: Repository<TypeEntity>,
     private readonly configService: ConfigService,
   ) {}
 
@@ -47,31 +49,126 @@ export class SeedingService {
 
   async seedCategories() {
     const categories = [
-      { title: 'Roads & Sidewalks', icon: '🛣️' },
-      { title: 'Streetlights & Electrical', icon: '💡' },
-      { title: 'Traffic & Signals', icon: '🚦' },
-      { title: 'Water & Sewer', icon: '🚰' },
-      { title: 'Waste Management', icon: '♻️' },
-      { title: 'Public Infrastructure', icon: '🏗️' },
-      { title: 'Internet & Telecommunications', icon: '📡' },
-      { title: 'Safety Hazards', icon: '🛑' },
-      { title: 'Public Transport', icon: '🚇' },
-      { title: 'Health & Sanitation', icon: '🦠' },
-      { title: 'Animal-Related Issues', icon: '🐾' },
+      {
+        title: 'Roads & Sidewalks',
+        icon: '🛣️',
+        types: [
+          'Potholes',
+          'Sidewalk Cracks or Uneven Pavement',
+          'Road Blockages',
+          'Flooded Roads',
+          'Faded or Missing Road Markings',
+        ],
+      },
+      {
+        title: 'Streetlights & Electrical',
+        icon: '💡',
+        types: [
+          'Streetlight Malfunctions',
+          'Exposed Electrical Wires',
+          'Public EV Charging Station Issues',
+        ],
+      },
+      {
+        title: 'Traffic & Signals',
+        icon: '🚦',
+        types: [
+          'Traffic Signal Malfunctions',
+          'Missing or Damaged Road Signs',
+          'Overgrown Vegetation Blocking Traffic Signs',
+        ],
+      },
+      {
+        title: 'Water & Sewer',
+        icon: '🚰',
+        types: ['Water Leaks', 'Sewage Issues', 'Fire Hydrant Issues'],
+      },
+      {
+        title: 'Waste Management',
+        icon: '♻️',
+        types: [
+          'Illegal Dumping',
+          'Overflowing Trash Bins',
+          'Recycling Bin Issues',
+        ],
+      },
+      {
+        title: 'Public Infrastructure',
+        icon: '🏗️',
+        types: [
+          'Public Property Damage',
+          'Damaged Benches or Seating',
+          'Broken Fountains or Public Water Dispensers',
+          'Bridge or Overpass Structural Damage',
+        ],
+      },
+      {
+        title: 'Internet & Telecommunications',
+        icon: '📡',
+        types: ['Public WiFi Not Working', 'Cell Tower Issues'],
+      },
+      {
+        title: 'Safety Hazards',
+        icon: '🛑',
+        types: [
+          'Gas Leak',
+          'Unsafe Areas',
+          'Fallen Trees or Large Branches',
+          'Damaged Guardrails or Safety Barriers',
+        ],
+      },
+      {
+        title: 'Public Transport',
+        icon: '🚇',
+        types: [
+          'Bus Stop or Train Station Issues',
+          'Public Transport Delays or Service Interruptions',
+          'Bike or Scooter Share Issues',
+        ],
+      },
+      {
+        title: 'Health & Sanitation',
+        icon: '🦠',
+        types: [
+          'Public Restroom Issues',
+          'Standing Water & Mosquito Breeding Sites',
+          'Dead Animals on Roads',
+        ],
+      },
+      {
+        title: 'Animal-Related Issues',
+        icon: '🐾',
+        types: [
+          'Stray Animals',
+          'Injured or Dead Animals on Roads',
+          'Pest Infestation Reports',
+        ],
+      },
     ];
 
+    const existingCategories = await this.categoriesRepository.find();
+    const existingCategoryTitles = new Set(
+      existingCategories.map((c) => c.title),
+    );
+
     for (const category of categories) {
-      const exists = await this.categoriesRepository.findOne({
-        where: { title: category.title },
-      });
-      if (!exists) {
-        await this.categoriesRepository.save(category);
-        this.logger.log(`Category '${category.title}' seeded.`);
-      } else {
+      if (existingCategoryTitles.has(category.title)) {
         this.logger.log(
           `Category '${category.title}' already exists, skipping.`,
         );
+        continue;
       }
+
+      const newCategory = await this.categoriesRepository.save({
+        title: category.title,
+        icon: category.icon,
+      });
+      const types = category.types.map((typeTitle) => ({
+        title: typeTitle,
+        category: newCategory,
+      }));
+      await this.typesRepository.save(types);
+      this.logger.log(`Category '${category.title}' and its types seeded.`);
     }
   }
 }

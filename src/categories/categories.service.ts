@@ -11,10 +11,13 @@ export class CategoriesService {
   ) {}
 
   async getAll() {
-    return await this.categoriesRepository.find();
+    return await this.categoriesRepository.find({ relations: { types: true } });
   }
 
   async getById(id: number) {
-    return await this.categoriesRepository.findOne({ where: { id } });
+    return await this.categoriesRepository.findOne({
+      where: { id },
+      relations: { types: true },
+    });
   }
 }

@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities';
 
 import { SeedingService } from './seeding.service';
-import { CategoryEntity } from 'src/categories/entities';
+import { CategoryEntity, TypeEntity } from 'src/categories/entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, CategoryEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity, CategoryEntity, TypeEntity])],
   providers: [SeedingService],
   exports: [SeedingService],
 })
