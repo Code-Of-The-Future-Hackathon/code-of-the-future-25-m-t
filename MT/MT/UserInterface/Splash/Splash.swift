@@ -13,7 +13,7 @@ struct Splash: View {
     var body: some View {
         ZStack {
             VStack {
-                TypographyText(text: "Meden Rudnik M&T GOCATA KANGAL", typography: .bigHeading)
+                TypographyText(text: "M&T", typography: .bigHeading)
                     .foregroundStyle(.black.opacity(0.8))
                 if moveToTop {
                     Spacer()
