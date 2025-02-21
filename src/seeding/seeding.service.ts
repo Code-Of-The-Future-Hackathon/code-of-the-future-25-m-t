@@ -66,6 +66,7 @@ export class SeedingService {
     },
     {
       title: 'Internet & Telecommunications',
+      supportsImages: false,
       icon: '📡',
       types: ['Public WiFi Not Working', 'Cell Tower Issues'],
     },
@@ -163,6 +164,7 @@ export class SeedingService {
       await this.categoriesRepository.save({
         title: category.title,
         icon: category.icon,
+        supportsImages: category.supportsImages ?? true,
       });
 
       this.logger.log(`Category '${category.title}' seeded.`);

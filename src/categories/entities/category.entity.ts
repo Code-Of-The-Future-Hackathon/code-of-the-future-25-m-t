@@ -13,6 +13,11 @@ export class CategoryEntity {
   @Column()
   icon: string;
 
+  @Column({
+    default: true,
+  })
+  supportsImages: boolean;
+
   @OneToMany(() => TypeEntity, (type) => type.category, {
     cascade: true,
   })

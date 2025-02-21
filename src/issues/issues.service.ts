@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { UserEntity } from 'src/users/entities';
 import { CategoriesService } from 'src/categories/categories.service';
 import { FilesService } from 'src/files/files.service';
-import { FileEntity } from 'src/files/entities';
 
 import { IssueEntity } from './entities';
 import { CreateIssueDto } from './dto';
@@ -24,11 +23,11 @@ export class IssuesService {
     dto: CreateIssueDto,
     file: Express.Multer.File,
   ) {
-    let fileEntity: FileEntity | undefined;
+    await this.categoriesService.checkImageSupport(dto.typeId, file);
 
-    if (file) {
-      fileEntity = await this.filesService.uploadFile(file);
-    }
+    const fileEntity = file
+      ? await this.filesService.uploadFile(file)
+      : undefined;
 
     const type = await this.categoriesService.findOneTypeOrFail(dto.typeId);
     const issue = this.issueRepository.create({

@@ -25,19 +25,28 @@ export class CategoriesService {
     });
   }
 
-  async findOneType(id: number) {
+  async findOneType(id: number, loadCategory = false) {
     return await this.typesRepository.findOne({
+      ...(loadCategory ? { relations: ['category'] } : {}),
       where: { id },
     });
   }
 
-  async findOneTypeOrFail(typeId: number) {
-    const type = await this.findOneType(typeId);
+  async findOneTypeOrFail(typeId: number, loadCategory = false) {
+    const type = await this.findOneType(typeId, loadCategory);
 
     if (!type) {
       throw new BadRequestException(CategoryErrorCodes.TypeNotFoundError);
     }
 
     return type;
+  }
+
+  async checkImageSupport(typeId: number, file: Express.Multer.File) {
+    const type = await this.findOneTypeOrFail(typeId, true);
+
+    if (file && !type.category.supportsImages) {
+      throw new BadRequestException(CategoryErrorCodes.ImageNotSupportedError);
+    }
   }
 }
