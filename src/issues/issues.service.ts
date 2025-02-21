@@ -43,7 +43,7 @@ export class IssuesService {
 
   async findAll() {
     return await this.issueRepository.find({
-      relations: ['type', 'user', 'file'],
+      relations: ['type', 'type.category', 'user', 'file'],
     });
   }
 
