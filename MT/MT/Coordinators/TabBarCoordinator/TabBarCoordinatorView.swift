@@ -30,6 +30,8 @@ struct TabBarCoordinatorView: View {
                         }
                         .tag(index)
                 }
+                .toolbarBackground(.white, for: .tabBar)
+                .toolbarBackground(.visible, for: .tabBar)
             }
         }
         .ignoresSafeArea()

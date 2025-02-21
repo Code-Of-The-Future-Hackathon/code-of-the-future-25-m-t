@@ -12,6 +12,7 @@ import GoogleSignIn
 @main
 struct MTApp: App {
     @StateObject var appCoordinator = AppCoordinator()
+    @StateObject private var locationManager = LocationManager()
 
     var body: some Scene {
         WindowGroup {
@@ -21,6 +22,7 @@ struct MTApp: App {
                     .onOpenURL { url in
                         GIDSignIn.sharedInstance.handle(url)
                     }
+                    .environmentObject(locationManager)
             }
         }
     }
