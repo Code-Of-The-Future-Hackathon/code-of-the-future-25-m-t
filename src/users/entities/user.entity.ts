@@ -48,6 +48,12 @@ export class UserEntity {
   })
   role: UserRoles;
 
+  @Column({
+    default: 0,
+    type: 'int',
+  })
+  points: number;
+
   @OneToMany(() => SessionEntity, (session) => session.user, {
     nullable: true,
     cascade: true,
