@@ -5,7 +5,6 @@
 //  Created by Mihail Kolev on 21/02/2025.
 //
 
-
 import SwiftUI
 
 enum LoginDestination {

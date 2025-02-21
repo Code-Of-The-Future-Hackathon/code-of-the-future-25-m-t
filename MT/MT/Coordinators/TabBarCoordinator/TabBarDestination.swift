@@ -14,8 +14,6 @@ enum TabBarDestination: Identifiable {
             "home"
         case .profile:
             "profile"
-//        case .tab3:
-//            "tab3"
         }
     }
     
