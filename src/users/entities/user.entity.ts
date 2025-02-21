@@ -9,6 +9,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { UserRoles } from 'src/common';
 import { SessionEntity } from 'src/auth/entities';
+import { IssueEntity } from 'src/issues/entities';
 
 @Entity('user')
 export class UserEntity {
@@ -62,6 +63,9 @@ export class UserEntity {
     cascade: true,
   })
   sessions: SessionEntity[];
+
+  @OneToMany(() => IssueEntity, (issue) => issue.user)
+  issues: IssueEntity[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: string;

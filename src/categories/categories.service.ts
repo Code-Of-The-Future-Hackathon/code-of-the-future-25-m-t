@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CategoryEntity } from './entities';
+
+import { CategoryEntity, TypeEntity } from './entities';
+import { CategoryErrorCodes } from './errors';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectRepository(CategoryEntity)
     private readonly categoriesRepository: Repository<CategoryEntity>,
+    @InjectRepository(TypeEntity)
+    private readonly typesRepository: Repository<TypeEntity>,
   ) {}
 
   async getAll() {
@@ -19,5 +23,21 @@ export class CategoriesService {
       where: { id },
       relations: { types: true },
     });
+  }
+
+  async findOneType(id: number) {
+    return await this.typesRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async findOneTypeOrFail(typeId: number) {
+    const type = await this.findOneType(typeId);
+
+    if (!type) {
+      throw new BadRequestException(CategoryErrorCodes.TypeNotFoundError);
+    }
+
+    return type;
   }
 }

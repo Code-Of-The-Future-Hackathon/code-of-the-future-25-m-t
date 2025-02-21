@@ -28,7 +28,7 @@ async function bootstrap() {
 
   if (nodeEnv === 'DEV') {
     const config = new DocumentBuilder()
-      .setTitle('Backoffice API')
+      .setTitle('COTF M&T API')
       .setVersion('1.0')
       .addBearerAuth({ type: 'http' }, 'AccessToken')
       .addBearerAuth({ type: 'http' }, 'RefreshToken')
