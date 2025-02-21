@@ -6,14 +6,151 @@
 //
 
 import SwiftUI
+import GoogleSignIn
 
 struct SignInView: View {
     @StateObject var viewModel: SignInViewModel
-    
+
     var body: some View {
         ZStack {
-            Color.yellow.opacity(0.1)
+            Color(.systemBackground).opacity(0.95)
                 .ignoresSafeArea()
+            title
+
+            VStack(spacing: 24) {
+                VStack(spacing: 8) {
+                    TypographyText(text: "Welcome", typography: .mediumHeading)
+                        .foregroundStyle(.black.opacity(0.8))
+                }
+                emailField
+                passwordField
+                resetPasswordText
+                continueButton
+
+                TypographyText(text: "Or log in with:", typography: .body2)
+                    .foregroundStyle(.black.opacity(0.8))
+                    .multilineTextAlignment(.center)
+
+                mediaIcons
+                signUpText
+            }
+            .padding(16)
+            .background {
+                RoundedRectangle(cornerRadius: 6)
+                    .foregroundStyle(Color(.secondarySystemBackground).opacity(0.9))
+            }
+            .padding(16)
+        }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
+        .alert("Login failed", isPresented: $viewModel.didFailLogin) {
+            Button("OK") {}
+        } message: {
+            TypographyText(text: viewModel.requestErrorMessage, typography: Typography.body3)
+        }
+        .navigationBarBackButtonHidden()
+    }
+
+    private var title: some View {
+        VStack {
+            TypographyText(text: "M&T", typography: .bigHeading)
+                .foregroundStyle(.black.opacity(0.8))
+            Spacer()
+        }
+        .padding(.top, 34)
+    }
+
+    private var continueButton: some View {
+        CustomButton(action: viewModel.login, text: "CONTINUE")
+            .padding(.horizontal, 8)
+    }
+
+    private var emailField: some View {
+        TextField("Email address", text: $viewModel.email)
+            .keyboardType(.emailAddress)
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
+    }
+
+    private var passwordField: some View {
+        SecureField("Password", text: $viewModel.password)
+    }
+
+    private var resetPasswordText: some View {
+        HStack(spacing: 4) {
+            TypographyText(text: "I forgot my password.", typography: .body)
+                .foregroundStyle(.black.opacity(0.8))
+            Button(action: {
+                //TODO: Update logic later
+            }) {
+                TypographyText(text: "Reset here", typography: .body)
+                    .foregroundStyle(.black.opacity(0.8))
+                    .underline()
+            }
+        }
+    }
+
+    private var mediaIcons: some View {
+        HStack(spacing: 24) {
+            Button(action: { }) {
+                Image(.appleIcon)
+                    .resizable()
+                    .frame(width: 40, height: 40)
+            }
+
+            Button(action: handleSignupButton) {
+                Image(.googleIcon)
+                    .resizable()
+                    .frame(width: 40, height: 40)
+            }
+        }
+    }
+
+    func handleSignupButton() {
+        if let rootViewController = getRootViewController() {
+            GIDSignIn.sharedInstance.signIn(
+                withPresenting: rootViewController
+            ) { result, error in
+                guard let result else {
+                    return
+                }
+                if let token = result.user.idToken?.tokenString {
+                    viewModel.googleLogin(token: token)
+                }
+            }
+        }
+    }
+
+    func getRootViewController() -> UIViewController? {
+        guard let scene = UIApplication.shared.connectedScenes.first as?
+                UIWindowScene,
+              let rootViewController = scene.windows.first?.rootViewController else {
+            return nil
+        }
+        return getVisibleViewController(from: rootViewController)
+    }
+
+    private func getVisibleViewController(from vc: UIViewController) -> UIViewController {
+        if let nav = vc as? UINavigationController {
+            return getVisibleViewController(from: nav.visibleViewController!)
+        }
+        if let tab = vc as? UITabBarController {
+            return getVisibleViewController(from: tab.selectedViewController!)
+        }
+        if let presented = vc.presentedViewController {
+            return getVisibleViewController(from: presented)
+        }
+        return vc
+    }
+
+    private var signUpText: some View {
+        HStack(spacing: 4) {
+            TypographyText(text: "Do you have an account?", typography: .body)
+                .foregroundStyle(.black.opacity(0.8))
+            Button(action: { viewModel.goToSignUp?() }) {
+                TypographyText(text: "Sign up", typography: .body)
+                    .foregroundStyle(.black.opacity(0.8))
+                    .underline()
+            }
         }
     }
 }

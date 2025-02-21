@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import GoogleSignIn
+
 
 @main
 struct MTApp: App {
@@ -16,6 +18,9 @@ struct MTApp: App {
             ZStack {
                 appCoordinator.start()
                     .preferredColorScheme(.light)
+                    .onOpenURL { url in
+                        GIDSignIn.sharedInstance.handle(url)
+                    }
             }
         }
     }

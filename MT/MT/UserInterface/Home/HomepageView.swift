@@ -12,7 +12,11 @@ struct HomepageView: View {
     @StateObject var viewModel: HomepageViewModel
 
     var body: some View {
-        Text("Homepage")
+        ZStack {
+            Color(.systemBackground).opacity(0.95)
+                .ignoresSafeArea()
+            Text("Homepage")
+        }
     }
 }
 

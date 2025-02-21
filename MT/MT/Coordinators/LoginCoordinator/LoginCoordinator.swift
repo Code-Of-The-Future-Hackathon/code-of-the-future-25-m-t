@@ -24,7 +24,8 @@ class LoginCoordinator: Coordinator, ObservableObject {
         self.communication = communication
         self.userRepository = userRepository
 
-        let signInViewModel = SignInViewModel()
+        let signInViewModel = SignInViewModel(communication: communication,
+                                              userRepository: userRepository)
         initialDestination = .signIn(viewModel: signInViewModel)
 
         signInViewModel.loginSuccessful = { [weak self] in
@@ -35,7 +36,8 @@ class LoginCoordinator: Coordinator, ObservableObject {
 
 
     func showSignUp() {
-        let viewModel = SignUpViewModel()
+        let viewModel = SignUpViewModel(communication: communication,
+                                        userRepository: userRepository)
         viewModel.registerSuccessful = { [weak self] in
             self?.successfulLogin?()
         }

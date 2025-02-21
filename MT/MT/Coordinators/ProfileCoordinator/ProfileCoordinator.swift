@@ -19,6 +19,10 @@ class ProfileCoordinator: Coordinator, ObservableObject {
     init() {
         let profileViewModel = ProfileViewModel()
         initialDestination = .profile(viewModel: profileViewModel)
+
+        profileViewModel.logoutClicked = { [weak self] in
+            self?.logout?()
+        }
     }
 
     @ViewBuilder
