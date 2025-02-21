@@ -237,3 +237,12 @@ extension CommunicationManager: AuthMeCommunication {
                                          headers: defaultHeaders))
     }
 }
+
+extension CommunicationManager: CategoriesCommunication {
+    func loadCategories() async throws -> [Category] {
+        let endpoint = Constants.RequestEndpoint.getCategories
+
+        return try await execute(Request(endpoint,
+                                         headers: defaultHeaders))
+    }
+}

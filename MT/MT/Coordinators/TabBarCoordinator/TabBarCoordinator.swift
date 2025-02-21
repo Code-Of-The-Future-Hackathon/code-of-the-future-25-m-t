@@ -20,7 +20,7 @@ class TabBarCoordinator: Coordinator, ObservableObject {
     var logout: Event?
 
     private lazy var homeCoordinator: HomeCoordinator = {
-        let coordinator = HomeCoordinator()
+        let coordinator = HomeCoordinator(communication: communicationManager)
 
         return coordinator
     }()
