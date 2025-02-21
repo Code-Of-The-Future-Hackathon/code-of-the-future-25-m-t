@@ -48,6 +48,9 @@ export class UserEntity {
   })
   role: UserRoles;
 
+  @Column({ default: false })
+  isGuest: boolean;
+
   @Column({
     default: 0,
     type: 'int',
