@@ -111,4 +111,12 @@ export class UsersService {
       1,
     );
   }
+
+  async incrUserPoints(userId: string, points: number) {
+    return await this.usersRepository.increment(
+      { id: userId },
+      'points',
+      points,
+    );
+  }
 }
