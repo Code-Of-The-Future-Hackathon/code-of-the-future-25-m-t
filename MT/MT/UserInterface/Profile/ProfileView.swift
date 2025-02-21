@@ -32,6 +32,7 @@ struct ProfileView: View {
                     }
                 }
             }
+            .padding()
         }
         .alert("Are you sure you want to log out?", isPresented: $showLogoutAlert) {
             Button("Cancel", role: .cancel) { }
