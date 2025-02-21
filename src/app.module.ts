@@ -10,6 +10,7 @@ import { typeOrmAsyncConfig } from './config';
 import { AuthModule } from './auth/auth.module';
 import { SeedingModule } from './seeding/seeding.module';
 import { CategoriesModule } from './categories/categories.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CategoriesModule } from './categories/categories.module';
     CategoriesModule,
     AuthModule,
     SeedingModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [
