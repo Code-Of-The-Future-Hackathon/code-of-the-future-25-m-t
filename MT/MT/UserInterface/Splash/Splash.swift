@@ -12,6 +12,9 @@ struct Splash: View {
 
     var body: some View {
         ZStack {
+            Color(.systemBackground).opacity(0.95)
+                .ignoresSafeArea()
+
             VStack {
                 TypographyText(text: "M&T", typography: .bigHeading)
                     .foregroundStyle(.black.opacity(0.8))

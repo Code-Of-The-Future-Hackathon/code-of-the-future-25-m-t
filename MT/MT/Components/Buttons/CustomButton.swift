@@ -19,7 +19,7 @@ struct CustomButton: View {
                 Spacer()
 
                 TypographyText(text: text, typography: .body2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color(.label).opacity(0.9))
                     .frame(height: 26)
 
                 Spacer()
@@ -28,10 +28,10 @@ struct CustomButton: View {
             .background {
                 ZStack {
                     RoundedRectangle(cornerRadius: 20)
-                        .foregroundStyle(.red.opacity(0.2))
+                        .foregroundStyle(Color(.systemBlue).opacity(0.8))
 
                     RoundedRectangle(cornerRadius: 20)
-                        .stroke(.blue, lineWidth: 2)
+                        .stroke(Color(.systemBlue).opacity(0.7), lineWidth: 1)
                 }
             }
             .clipShape(Rectangle())
