@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { typeOrmAsyncConfig } from './config';
 import { AuthModule } from './auth/auth.module';
 import { SeedingModule } from './seeding/seeding.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SeedingModule } from './seeding/seeding.module';
     PassportModule,
     SwaggerModule,
     UsersModule,
+    CategoriesModule,
     AuthModule,
     SeedingModule,
   ],
