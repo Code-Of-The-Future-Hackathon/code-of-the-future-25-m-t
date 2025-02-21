@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+import { IssueEntity } from 'src/issues/entities';
+
 import { CategoryEntity } from './category.entity';
 
 @Entity('type')
@@ -11,4 +19,7 @@ export class TypeEntity {
 
   @ManyToOne(() => CategoryEntity, (category) => category.types)
   category: CategoryEntity;
+
+  @OneToMany(() => IssueEntity, (issue) => issue.type)
+  issues: IssueEntity[];
 }

@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { SeedingModule } from './seeding/seeding.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
+import { IssuesModule } from './issues/issues.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FilesModule } from './files/files.module';
     AuthModule,
     SeedingModule,
     FilesModule,
+    IssuesModule,
   ],
   controllers: [],
   providers: [
