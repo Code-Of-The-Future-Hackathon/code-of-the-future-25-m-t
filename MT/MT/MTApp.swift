@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct MTApp: App {
+    @StateObject var appCoordinator = AppCoordinator()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ZStack {
+                appCoordinator.start()
+                    .preferredColorScheme(.light)
+            }
         }
     }
 }

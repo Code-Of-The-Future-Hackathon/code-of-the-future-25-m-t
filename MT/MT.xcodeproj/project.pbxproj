@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9A0C48422D69034400F18BBA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9A0C48412D69034400F18BBA /* Alamofire */; };
+		9A0C48452D69037400F18BBA /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9A0C48442D69037400F18BBA /* KeychainSwift */; };
+		9A0C48482D6903AC00F18BBA /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 9A0C48472D6903AC00F18BBA /* GoogleSignIn */; };
+		9A0C484A2D6903AC00F18BBA /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9A0C48492D6903AC00F18BBA /* GoogleSignInSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		2A19E9F72D68EF1200995D29 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +59,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A0C48452D69037400F18BBA /* KeychainSwift in Frameworks */,
+				9A0C48422D69034400F18BBA /* Alamofire in Frameworks */,
+				9A0C48482D6903AC00F18BBA /* GoogleSignIn in Frameworks */,
+				9A0C484A2D6903AC00F18BBA /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +123,10 @@
 			);
 			name = MT;
 			packageProductDependencies = (
+				9A0C48412D69034400F18BBA /* Alamofire */,
+				9A0C48442D69037400F18BBA /* KeychainSwift */,
+				9A0C48472D6903AC00F18BBA /* GoogleSignIn */,
+				9A0C48492D6903AC00F18BBA /* GoogleSignInSwift */,
 			);
 			productName = MT;
 			productReference = 2A19E9E62D68EF1000995D29 /* MT.app */;
@@ -195,6 +210,11 @@
 			);
 			mainGroup = 2A19E9DD2D68EF1000995D29;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9A0C48402D69034400F18BBA /* XCRemoteSwiftPackageReference "Alamofire" */,
+				9A0C48432D69037400F18BBA /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				9A0C48462D6903AC00F18BBA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2A19E9E72D68EF1000995D29 /* Products */;
 			projectDirPath = "";
@@ -558,6 +578,56 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9A0C48402D69034400F18BBA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		9A0C48432D69037400F18BBA /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
+		9A0C48462D6903AC00F18BBA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9A0C48412D69034400F18BBA /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A0C48402D69034400F18BBA /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		9A0C48442D69037400F18BBA /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A0C48432D69037400F18BBA /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+		9A0C48472D6903AC00F18BBA /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A0C48462D6903AC00F18BBA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		9A0C48492D6903AC00F18BBA /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A0C48462D6903AC00F18BBA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2A19E9DE2D68EF1000995D29 /* Project object */;
 }
