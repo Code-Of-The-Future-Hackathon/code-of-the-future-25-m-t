@@ -131,14 +131,14 @@ export class UsersService {
   constructNotifications(user: UserEntity, prevTitle: string, points: number) {
     const messages = [
       {
-        title: 'An issue you reported has been resolved',
-        body: `Congratulations! You have earned ${points} points`,
+        title: 'Issue Resolved',
+        body: `You earned ${points} points`,
       },
     ];
 
     if (prevTitle !== user.title) {
       messages.push({
-        title: 'Congratulations! You have unlocked a new title',
+        title: 'New Title Unlocked',
         body: `You are now a ${user.title}`,
       });
     }
