@@ -67,8 +67,8 @@ export class IssuesController {
   @Role(UserRoles.Admin)
   @Patch('/status')
   async changeStatus(
-    @Query() dto: ChangeStatusDto,
-    @Req() req: { user: UserEntity },
+    @Req() req: RequestWithUser,
+    @Body() dto: ChangeStatusDto,
   ) {
     return await this.issuesService.changeStatus(req.user, dto);
   }

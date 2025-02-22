@@ -283,6 +283,6 @@ export class IssuesService {
     group.status = dto.status;
     group.resolver = user;
 
-    return await this.issueGroupsRepository.save(group);
+    await this.issueGroupsRepository.save(group);
   }
 }
