@@ -135,6 +135,7 @@ export class IssuesService {
       .leftJoinAndSelect('group.type', 'type')
       .leftJoinAndSelect('group.issues', 'issue')
       .where('group.lat <= :topLat', { topLat: topLeft.lat })
+      .andWhere('group.status = :status', {status: GroupStatusEnum.Active})
       .andWhere('group.lat >= :bottomLat', { bottomLat: bottomRight.lat })
       .andWhere('group.lon >= :topLon', { topLon: topLeft.lon })
       .andWhere('group.lon <= :bottomLon', { bottomLon: bottomRight.lon });
