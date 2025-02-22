@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias SignInCommunication = LoginCommunication & AuthMeCommunication & GoogleAuthCommunication
+typealias SignInCommunication = LoginCommunication & AuthMeCommunication & GoogleAuthCommunication & ContinueAsGuestCommunication
 
 class SignInViewModel: ObservableObject {
     @Published var email = ""
@@ -75,5 +75,24 @@ class SignInViewModel: ObservableObject {
             areAllMendatoryFieldsChecked = true
         }
         return areAllMendatoryFieldsChecked
+    }
+
+    func continueAsGuest() {
+        Task { @MainActor in
+            do {
+                let loginResponse = try await communication.continueAsGuest()
+
+                userRepository.authToken = loginResponse
+
+                let profileResponse = try await communication.getMyProfile()
+
+                userRepository.user = profileResponse
+
+                loginSuccessful?()
+            } catch {
+                didFailLogin = true
+                requestErrorMessage = error.customErrorMessage("Could not login this user")
+            }
+        }
     }
 }

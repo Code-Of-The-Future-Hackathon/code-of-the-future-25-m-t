@@ -25,11 +25,20 @@ struct SignUpView: View {
                 emailField
                 
                 passwordFields
-                continueButton
-                
+
+                VStack(spacing: 12) {
+                    continueButton
+                    guestButton
+                }
+
                 TypographyText(text: "Or sign up with:", typography: .body2)
                     .foregroundStyle(.black.opacity(0.8))
                     .multilineTextAlignment(.center)
+
+                VStack(spacing: 12) {
+                    googleButton
+                    appleButton
+                }
                 
                 mediaIcons
                     .padding(.bottom, 50)
@@ -51,8 +60,87 @@ struct SignUpView: View {
         } message: {
             TypographyText(text: viewModel.requestErrorMessage, typography: Typography.body3)
         }
-//        .navigationBarBackButtonHidden()
+        .navigationBarBackButtonHidden()
     }
+
+    private var googleButton: some View {
+        Button {
+            handleSignupButton()
+        } label: {
+            HStack(spacing: 4) {
+                Spacer()
+
+                Image(.googleIcon)
+                    .resizable()
+                    .frame(width: 40, height: 40)
+
+                TypographyText(text: "Sign up with Google", typography: .body2)
+                    .foregroundStyle(Color(.label).opacity(0.9))
+                    .frame(height: 24)
+
+                Spacer()
+            }
+            .frame(height: 48)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color(.black).opacity(0.7), lineWidth: 1)
+            }
+            .contentShape(Rectangle())
+        }
+    }
+
+    private var appleButton: some View {
+        Button {
+            //TODO: Apple login
+        } label: {
+            HStack(spacing: 12) {
+                Spacer()
+
+                Image(systemName: "apple.logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 28)
+                    .foregroundStyle(.black.opacity(0.8))
+
+                TypographyText(text: "Sign up with Apple", typography: .body2)
+                    .foregroundStyle(Color(.label).opacity(0.9))
+                    .frame(height: 24)
+
+                Spacer()
+            }
+            .padding(8)
+            .frame(height: 48)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color(.black).opacity(0.7), lineWidth: 1)
+            }
+            .contentShape(Rectangle())
+        }
+    }
+
+    private var guestButton: some View {
+        Button {
+            viewModel.continueAsGuest()
+        } label: {
+            HStack(spacing: 12) {
+                Spacer()
+
+                TypographyText(text: "Continue as guest", typography: .body2)
+                    .foregroundStyle(Color(.systemBlue))
+                    .frame(height: 24)
+
+                Spacer()
+            }
+            .padding(8)
+            .frame(height: 48)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color(.black).opacity(0.7), lineWidth: 1)
+            }
+            .contentShape(Rectangle())
+        }
+    }
+
     
     func handleSignupButton() {
         if let rootViewController = getRootViewController() {
@@ -93,11 +181,22 @@ struct SignUpView: View {
     
     private var title: some View {
         VStack {
-            TypographyText(text: "M&T", typography: .bigHeading)
-                .foregroundStyle(.black.opacity(0.8))
+            ZStack {
+                TypographyText(text: "ReportIt", typography: .bigHeading)
+                    .foregroundStyle(.black.opacity(0.8))
+                    .padding()
+                HStack {
+                    Button(action: { viewModel.goBack?() }) {
+                        Image(systemName: "arrow.backward")
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+            }
             Spacer()
         }
-        .padding(.top, 34)
+//        .padding(.top, 34)
     }
 
     private var emailField: some View {
@@ -133,8 +232,7 @@ struct SignUpView: View {
 
     private var continueButton: some View {
         CustomButton(action: viewModel.register,
-                   text: "CONTINUE")
-            .padding(.horizontal, 8)
+                   text: "Continue")
     }
 
 }

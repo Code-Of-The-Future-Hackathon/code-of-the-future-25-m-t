@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 typealias SignCommunication = LoginCommunication & RegistrationCommunication & AuthMeCommunication & GoogleAuthCommunication
+& ContinueAsGuestCommunication
 
 class LoginCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()
@@ -41,11 +42,19 @@ class LoginCoordinator: Coordinator, ObservableObject {
         viewModel.registerSuccessful = { [weak self] in
             self?.successfulLogin?()
         }
+        viewModel.goBack = { [weak self] in
+            self?.removeLastPath()
+        }
+
         path.append(.signUp(viewModel: viewModel))
     }
 
     @ViewBuilder
     func start() -> AnyView {
         AnyView(LoginCoordinatorView(coordinator: self))
+    }
+
+    func removeLastPath() {
+        path.removeLast()
     }
 }

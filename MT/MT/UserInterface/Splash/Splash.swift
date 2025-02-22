@@ -16,8 +16,9 @@ struct Splash: View {
                 .ignoresSafeArea()
 
             VStack {
-                TypographyText(text: "M&T", typography: .bigHeading)
+                TypographyText(text: "ReportIt", typography: .bigHeading)
                     .foregroundStyle(.black.opacity(0.8))
+                    .padding()
                 if moveToTop {
                     Spacer()
                 }

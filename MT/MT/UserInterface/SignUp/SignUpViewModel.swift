@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias SignUpCommunication = RegistrationCommunication & AuthMeCommunication & GoogleAuthCommunication
+typealias SignUpCommunication = RegistrationCommunication & AuthMeCommunication & GoogleAuthCommunication & ContinueAsGuestCommunication
 
 class SignUpViewModel: ObservableObject {
     @Published var email = ""
@@ -20,6 +20,7 @@ class SignUpViewModel: ObservableObject {
     var userRepository: UserRepository
 
     var registerSuccessful: Event?
+    var goBack: Event?
 
     init(communication: SignUpCommunication, userRepository: UserRepository) {
         self.communication = communication
@@ -74,5 +75,24 @@ class SignUpViewModel: ObservableObject {
             areAllMendatoryFieldsChecked = true
         }
         return areAllMendatoryFieldsChecked
+    }
+
+    func continueAsGuest() {
+        Task { @MainActor in
+            do {
+                let loginResponse = try await communication.continueAsGuest()
+
+                userRepository.authToken = loginResponse
+
+                let profileResponse = try await communication.getMyProfile()
+
+                userRepository.user = profileResponse
+
+                registerSuccessful?()
+            } catch {
+                didFailRegister = true
+                requestErrorMessage = error.customErrorMessage("Could not login this user")
+            }
+        }
     }
 }

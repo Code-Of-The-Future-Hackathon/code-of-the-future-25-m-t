@@ -38,3 +38,7 @@ protocol GetAllReportsCommunication {
 protocol PushTokenCommunication {
     func postPushToken(token: String) async throws -> EmptyResponse
 }
+
+protocol ContinueAsGuestCommunication {
+    func continueAsGuest() async throws -> Tokens
+}
