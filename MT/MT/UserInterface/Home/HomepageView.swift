@@ -72,7 +72,7 @@ struct HomepageView: View {
 
             HStack(spacing: 16) {
                 Button(action: {
-                    // showCategoriesSheet.toggle()
+                    viewModel.openReportsList?(region, viewModel.visibleHeightKm)
                 }) {
                     Image(systemName: "list.bullet")
                         .resizable()
