@@ -10,6 +10,7 @@ import SwiftUI
 enum HomeDestination {
     case main(viewModel: HomepageViewModel)
     case reportProblem(viewModel: ReportProblemViewModel)
+    case reportDetail(viewModel: ReportDetailViewModel)
 }
 
 extension HomeDestination: Hashable {
@@ -22,6 +23,8 @@ extension HomeDestination: Hashable {
         case let (.main(lhsVM), .main(rhsVM)):
             return lhsVM === rhsVM
         case let (.reportProblem(lhsVM), .reportProblem(rhsVM)):
+            return lhsVM === rhsVM
+        case let (.reportDetail(lhsVM), .reportDetail(rhsVM)):
             return lhsVM === rhsVM
         default:
             return false
@@ -36,6 +39,8 @@ extension HomeDestination: View {
             HomepageView(viewModel: viewModel)
         case let .reportProblem(viewModel):
             ReportProblemView(viewModel: viewModel)
+        case let .reportDetail(viewModel):
+            ReportDetailView(viewModel: viewModel)
         }
     }
 }
