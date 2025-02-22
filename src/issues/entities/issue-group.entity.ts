@@ -13,6 +13,7 @@ import { GroupStatusEnum, ReporterEnum } from '../enums';
 import { CostEstimateType } from '../types';
 
 import { IssueEntity } from './issue.entity';
+import { UserEntity } from 'src/users/entities';
 
 @Entity('issue_group')
 export class IssueGroupEntity {
@@ -45,6 +46,12 @@ export class IssueGroupEntity {
     default: GroupStatusEnum.Active,
   })
   status: GroupStatusEnum;
+
+  @ManyToOne(() => UserEntity, (user) => user.resolvedGroups, {
+    nullable: true,
+    cascade: true,
+  })
+  resolver?: UserEntity;
 
   @Column({
     type: 'jsonb',

@@ -9,7 +9,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { UserRoles } from 'src/common';
 import { SessionEntity } from 'src/auth/entities';
-import { IssueEntity } from 'src/issues/entities';
+import { IssueEntity, IssueGroupEntity } from 'src/issues/entities';
 
 @Entity('user')
 export class UserEntity {
@@ -76,6 +76,9 @@ export class UserEntity {
 
   @OneToMany(() => IssueEntity, (issue) => issue.user)
   issues: IssueEntity[];
+
+  @OneToMany(() => IssueGroupEntity, (issue) => issue.resolver)
+  resolvedGroups: IssueGroupEntity[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: string;

@@ -237,7 +237,7 @@ export class IssuesService {
     return group;
   }
 
-  async changeStatus(id: number, dto: ChangeStatusDto) {
+  async changeStatus(user: UserEntity, id: number, dto: ChangeStatusDto) {
     const group = await this.findOneGroupOrFail(id);
 
     if (group.status === dto.status) {
@@ -252,6 +252,7 @@ export class IssuesService {
       });
     }
     group.status = dto.status;
+    group.resolver = user;
 
     return await this.issueGroupsRepository.save(group);
   }
