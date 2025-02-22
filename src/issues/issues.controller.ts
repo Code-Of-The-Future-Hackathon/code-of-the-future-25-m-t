@@ -8,6 +8,7 @@ import {
   Request,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
@@ -15,7 +16,7 @@ import { RequestWithUser } from 'src/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { IssuesService } from './issues.service';
-import { CreateIssueDto } from './dto';
+import { CreateIssueDto, GetGroupsDto } from './dto';
 
 @ApiTags('Issues')
 @Controller('issues')
@@ -35,14 +36,9 @@ export class IssuesController {
   }
 
   @Get()
-  async findAll() {
-    return await this.issuesService.findAll();
-  }
-
-  @ApiBearerAuth('AccessToken')
-  @Get('groups')
-  async findAllGroups() {
-    return await this.issuesService.findAllGroups();
+  async findAll(@Query() query: GetGroupsDto) {
+    return await this.issuesService.findGroupsWithDetails(query);
+    
   }
 
   @Get(':id')

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { UserEntity } from 'src/users/entities';
 import { CategoriesService } from 'src/categories/categories.service';
 import { FilesService } from 'src/files/files.service';
@@ -8,6 +8,7 @@ import { FilesService } from 'src/files/files.service';
 import { IssueEntity, IssueGroupEntity } from './entities';
 import { CreateIssueDto } from './dto';
 import { IssueErrorCodes } from './errors';
+import { GetGroupsDto } from './dto/get-groups.dto';
 
 @Injectable()
 export class IssuesService {
@@ -86,20 +87,8 @@ export class IssuesService {
   }
 
   async addToGroupsOrCreate(issue: IssueEntity) {
-    const { topLeft, bottomRight } = this.boundingBox(issue.lat, issue.lon, 10);
-
-    const groups = await this.issueGroupsRepository
-      .createQueryBuilder('group')
-      .leftJoinAndSelect('group.type', 'type')
-      .leftJoinAndSelect('group.issues', 'issue')
-      .where('type.id = :typeId', { typeId: issue.type.id })
-      .andWhere('group.lat <= :topLat', { topLat: topLeft.lat })
-      .andWhere('group.lat >= :bottomLat', { bottomLat: bottomRight.lat })
-      .andWhere('group.lon >= :topLon', { topLon: topLeft.lon })
-      .andWhere('group.lon <= :bottomLon', { bottomLon: bottomRight.lon })
-      .getMany();
-
-    if (groups.length > 0) {
+    const groups = await this.findAllGroups({lat: issue.lat, lon: issue.lon, radius: 10});
+    if (groups.length) {
       groups.forEach((group) => {
         if (!group.issues) group.issues = [];
         group.issues.push({ id: issue.id } as IssueEntity);
@@ -109,6 +98,7 @@ export class IssuesService {
     }
 
     const group = this.issueGroupsRepository.create({
+      address: issue.address,
       lat: issue.lat,
       lon: issue.lon,
       type: {
@@ -124,15 +114,37 @@ export class IssuesService {
     return await this.issueGroupsRepository.save(group);
   }
 
-  async findAllGroups() {
-    return await this.issueGroupsRepository.find({
-      relations: ['type', 'issues'],
-    });
+  async findAllGroups(data: GetGroupsDto) {
+    const { topLeft, bottomRight } = this.boundingBox(
+      data.lat,
+      data.lon,
+      data.radius,
+    );
+
+    const query = this.issueGroupsRepository
+      .createQueryBuilder('group')
+      .leftJoinAndSelect('group.type', 'type')
+      .leftJoinAndSelect('group.issues', 'issue')
+      .where('group.lat <= :topLat', { topLat: topLeft.lat })
+      .andWhere('group.lat >= :bottomLat', { bottomLat: bottomRight.lat })
+      .andWhere('group.lon >= :topLon', { topLon: topLeft.lon })
+      .andWhere('group.lon <= :bottomLon', { bottomLon: bottomRight.lon })
+
+      if (data.categoryId) {
+        query.andWhere('type.categoryId = :categoryId', { categoryId: data.categoryId });
+      }
+
+    return await query.getMany();
   }
 
-  async findAll() {
-    return await this.issueRepository.find({
-      relations: ['type', 'type.category', 'user', 'file'],
+  async findGroupsWithDetails(data: GetGroupsDto) {
+    const groups = await this.findAllGroups(data);
+
+    return groups.map((group) => {
+      return {
+        ...group,
+        distance: this.haversineDistance(data.lat, data.lon, group.lat, group.lon),
+      };
     });
   }
 
