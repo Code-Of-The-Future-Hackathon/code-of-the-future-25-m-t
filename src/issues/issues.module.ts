@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from 'src/categories/categories.module';
 import { FilesModule } from 'src/files/files.module';
 import { UsersModule } from 'src/users/users.module';
+import { AiModule } from 'src/ai/ai.module';
 
 import { IssuesService } from './issues.service';
 import { IssuesController } from './issues.controller';
@@ -14,6 +15,7 @@ import { IssueEntity, IssueGroupEntity } from './entities';
     CategoriesModule,
     FilesModule,
     UsersModule,
+    AiModule,
   ],
   controllers: [IssuesController],
   providers: [IssuesService],
