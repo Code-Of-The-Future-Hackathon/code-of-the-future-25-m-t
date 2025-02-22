@@ -25,6 +25,7 @@ extension Constants {
         case getMyProfile
         case googleAuth
         case refreshToken
+        case pushToken
         case getCategories
         case reportAnIssue
         case getIssues
@@ -44,6 +45,8 @@ extension Constants.RequestEndpoint: URLConvertible {
             return Self.serverURL + "/users/me"
         case .googleAuth:
             return Self.serverURL + "/auth/google-token-login"
+        case .pushToken:
+            return Self.serverURL + "/users/push-token"
         case .refreshToken:
             return Self.serverURL + "/auth/refresh"
         case .getCategories:
@@ -61,6 +64,8 @@ extension Constants.RequestEndpoint: HTTPMethodConvertible {
             return .post
         case .getMyProfile, .getCategories, .getIssues:
             return .get
+        case .pushToken:
+            return .patch
         }
     }
 }
