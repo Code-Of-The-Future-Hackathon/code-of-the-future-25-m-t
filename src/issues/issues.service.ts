@@ -14,6 +14,7 @@ import { ChangeStatusDto, CreateIssueDto } from './dto';
 import { GetGroupsDto } from './dto/get-groups.dto';
 import { GroupStatusEnum, ReporterEnum } from './enums';
 import { IssueErrorCodes } from './errors';
+import { UserRoles } from 'src/common';
 
 @Injectable()
 export class IssuesService {
@@ -164,7 +165,7 @@ export class IssuesService {
     return await this.issueGroupsRepository.save(group);
   }
 
-  async findAllGroups(data: GetGroupsDto) {
+  async findAllGroups(data: GetGroupsDto, user?: UserEntity) {
     const { topLeft, bottomRight } = this.boundingBox(
       data.lat,
       data.lon,
@@ -188,12 +189,22 @@ export class IssuesService {
         categoryId: data.categoryId,
       });
     }
+    if (data.resolvedByMe && user?.role === UserRoles.Admin) {
+      query.andWhere('group.resolverId = :resolverId', {
+        resolverId: user.id,
+      });
+    }
+    if (data.self && user) {
+      query.andWhere('group.userId = :userId', {
+        userId: user.id,
+      });
+    }
 
     return await query.getMany();
   }
 
-  async findGroupsWithDetails(data: GetGroupsDto) {
-    const groups = await this.findAllGroups(data);
+  async findGroupsWithDetails(data: GetGroupsDto, user: UserEntity) {
+    const groups = await this.findAllGroups(data, user);
 
     const mappedGroups = groups.map((group) => {
       return {

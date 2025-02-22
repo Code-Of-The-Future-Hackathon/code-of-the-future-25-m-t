@@ -40,8 +40,8 @@ export class IssuesController {
   }
 
   @Get()
-  async findAll(@Query() query: GetGroupsDto) {
-    return await this.issuesService.findGroupsWithDetails(query);
+  async findAll(@Query() query: GetGroupsDto, @Request() req: RequestWithUser) {
+    return await this.issuesService.findGroupsWithDetails(query, req.user);
   }
 
   @Get(':id')
