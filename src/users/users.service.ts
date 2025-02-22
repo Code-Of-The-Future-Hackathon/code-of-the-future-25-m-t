@@ -161,24 +161,22 @@ export class UsersService {
   }
 
   mapUserTitle(points: number) {
-    switch (true) {
-      case points >= 5000:
-        return 'Urban Legend';
-      case points >= 1000:
-        return 'City Guardian';
-      case points >= 500:
-        return 'Neighborhood Hero';
-      case points >= 250:
-        return 'Street Sentry';
-      case points >= 200:
-        return 'Pathfinder';
-      case points >= 100:
-        return 'Community Watcher';
-      case points >= 25:
-        return 'Local Reporter';
-      default:
-        return 'Beginner';
-    }
+    return (
+      this.getTitleMappings().find((mapping) => points >= mapping.points)
+        ?.title || 'Beginner'
+    );
+  }
+
+  getTitleMappings() {
+    return [
+      { points: 5000, title: 'Urban Legend' },
+      { points: 1000, title: 'City Guardian' },
+      { points: 500, title: 'Neighborhood Hero' },
+      { points: 250, title: 'Street Sentry' },
+      { points: 200, title: 'Pathfinder' },
+      { points: 100, title: 'Community Watcher' },
+      { points: 25, title: 'Local Reporter' },
+    ].sort((a, b) => b.points - a.points);
   }
 
   async updatePushToken(user: UserEntity, dto: UpdatePushTokenDto) {

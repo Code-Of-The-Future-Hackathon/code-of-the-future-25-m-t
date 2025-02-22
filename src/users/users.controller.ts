@@ -25,6 +25,11 @@ export class UsersController {
     return req.user;
   }
 
+  @Get('title-mappings')
+  async getTitleMappings() {
+    return this.usersService.getTitleMappings();
+  }
+
   @Patch('push-token')
   async updatePushToken(
     @Request() req: RequestWithUser,
