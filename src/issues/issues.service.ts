@@ -134,6 +134,7 @@ export class IssuesService {
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.type', 'type')
       .leftJoinAndSelect('group.issues', 'issue')
+      .leftJoinAndSelect('issue.file', 'file')
       .leftJoinAndSelect('type.category', 'category')
       .where('group.lat <= :topLat', { topLat: topLeft.lat })
       .andWhere('group.status = :status', { status: GroupStatusEnum.Active })
@@ -175,7 +176,7 @@ export class IssuesService {
   async findOneGroup(id: number) {
     return await this.issueGroupsRepository.findOne({
       where: { id },
-      relations: ['type', 'issues', 'issues.user'],
+      relations: ['type', 'issues', 'issues.user', 'issues.file'],
     });
   }
 
