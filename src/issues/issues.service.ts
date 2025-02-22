@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from 'src/users/entities';
@@ -15,6 +15,7 @@ import { SensorEntity } from 'src/sensors/entities';
 
 @Injectable()
 export class IssuesService {
+  private readonly logger = new Logger(IssuesService.name);
   private readonly EARTH_RADIUS = 6378000;
   private readonly MAX_RADIUS_METERS = 20_000;
 
@@ -67,6 +68,9 @@ export class IssuesService {
     dto: CreateIssueDto,
     file: Express.Multer.File,
   ) {
+    this.logger.log(
+      `Creating issue for user ${user.id} and file name ${file?.originalname}`,
+    );
     await this.categoriesService.checkImageSupport(dto.typeId, file);
 
     const fileEntity = file
