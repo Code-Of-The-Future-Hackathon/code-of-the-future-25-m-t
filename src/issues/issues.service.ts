@@ -136,7 +136,7 @@ export class IssuesService {
       .leftJoinAndSelect('group.issues', 'issue')
       .leftJoinAndSelect('type.category', 'category')
       .where('group.lat <= :topLat', { topLat: topLeft.lat })
-      .andWhere('group.status = :status', {status: GroupStatusEnum.Active})
+      .andWhere('group.status = :status', { status: GroupStatusEnum.Active })
       .andWhere('group.lat >= :bottomLat', { bottomLat: bottomRight.lat })
       .andWhere('group.lon >= :topLon', { topLon: topLeft.lon })
       .andWhere('group.lon <= :bottomLon', { bottomLon: bottomRight.lon });
@@ -173,7 +173,7 @@ export class IssuesService {
   }
 
   async findOneGroup(id: number) {
-    return await this.issueGroupsRepository.findOneOrFail({
+    return await this.issueGroupsRepository.findOne({
       where: { id },
       relations: ['type', 'issues', 'issues.user'],
     });
@@ -198,7 +198,7 @@ export class IssuesService {
 
     if (dto.status === GroupStatusEnum.Resolved) {
       group.issues.forEach((issue) => {
-        void this.usersService.incrUserPoints(issue.user.id, 10);
+        void this.usersService.incrUserPoints(issue.user, 10);
       });
     }
     group.status = dto.status;

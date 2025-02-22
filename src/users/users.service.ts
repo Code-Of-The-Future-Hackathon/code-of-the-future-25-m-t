@@ -7,8 +7,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RegisterDto } from 'src/auth/dtos';
 import { nanoid } from 'nanoid';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
-import { UserEntity } from './entities';
+import { UpdatePushTokenDto, UserEntity } from './entities';
 import { UserErrorCodes } from './errors';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async checkEmail(email: string) {
@@ -126,10 +128,34 @@ export class UsersService {
     );
   }
 
-  async incrUserPoints(userId: string, points: number) {
-    const user = await this.findOneOrFail(userId);
+  constructNotifications(user: UserEntity, prevTitle: string, points: number) {
+    const messages = [
+      {
+        title: 'An issue you reported has been resolved',
+        body: `Congratulations! You have earned ${points} points`,
+      },
+    ];
+
+    if (prevTitle !== user.title) {
+      messages.push({
+        title: 'Congratulations! You have unlocked a new title',
+        body: `You are now a ${user.title}`,
+      });
+    }
+
+    return messages;
+  }
+
+  async incrUserPoints(user: UserEntity, points: number) {
+    const prevTitle = user.title;
+
     user.points += points;
     user.title = this.mapUserTitle(user.points);
+
+    await this.notificationsService.sendMessages(
+      this.constructNotifications(user, prevTitle, points),
+      user.pushToken,
+    );
 
     return await this.usersRepository.save(user);
   }
@@ -137,21 +163,27 @@ export class UsersService {
   mapUserTitle(points: number) {
     switch (true) {
       case points >= 5000:
-        return 'Urban Legend';  
+        return 'Urban Legend';
       case points >= 1000:
-        return 'City Guardian';  
+        return 'City Guardian';
       case points >= 500:
-        return 'Neighborhood Hero';  
+        return 'Neighborhood Hero';
       case points >= 250:
-        return 'Street Sentry';  
+        return 'Street Sentry';
       case points >= 200:
-        return 'Pathfinder';  
+        return 'Pathfinder';
       case points >= 100:
-        return 'Community Watcher';  
+        return 'Community Watcher';
       case points >= 25:
-        return 'Local Reporter';  
+        return 'Local Reporter';
       default:
         return 'Beginner';
     }
+  }
+
+  async updatePushToken(user: UserEntity, dto: UpdatePushTokenDto) {
+    return await this.usersRepository.update(user.id, {
+      pushToken: dto.pushToken,
+    });
   }
 }
