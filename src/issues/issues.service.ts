@@ -134,6 +134,7 @@ export class IssuesService {
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.type', 'type')
       .leftJoinAndSelect('group.issues', 'issue')
+      .leftJoinAndSelect('type.category', 'category')
       .where('group.lat <= :topLat', { topLat: topLeft.lat })
       .andWhere('group.status = :status', {status: GroupStatusEnum.Active})
       .andWhere('group.lat >= :bottomLat', { bottomLat: bottomRight.lat })
