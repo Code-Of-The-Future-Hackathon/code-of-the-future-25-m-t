@@ -4,6 +4,7 @@ import {
   TypeOrmModuleAsyncOptions,
 } from '@nestjs/typeorm';
 import { SessionSubscriber } from 'src/auth/entities';
+import { SensorSubsciber } from 'src/sensors/entities';
 import { UserSubscriber } from 'src/users/entities/user-entity.subscriber';
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
@@ -21,7 +22,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
     password: configService.get<string>('DATABASE_PASSWORD'),
     migrations: [__dirname + '/../migrations/*.ts'],
     entities: [__dirname + '/../**/entities/*.entity{.ts,.js}'],
-    subscribers: [UserSubscriber, SessionSubscriber],
+    subscribers: [UserSubscriber, SessionSubscriber, SensorSubsciber],
   }),
   inject: [ConfigService],
 };
