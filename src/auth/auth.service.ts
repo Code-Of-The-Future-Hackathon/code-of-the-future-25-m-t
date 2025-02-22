@@ -31,6 +31,12 @@ export class AuthService {
     return await this.login(user);
   }
 
+  async registerGuest() {
+    const user = await this.usersService.createGuest();
+
+    return await this.login(user);
+  }
+
   async generateTokens(payload: any) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {

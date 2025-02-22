@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RegisterDto } from 'src/auth/dtos';
+import { nanoid } from 'nanoid';
 
 import { UserEntity } from './entities';
 import { UserErrorCodes } from './errors';
@@ -23,6 +24,16 @@ export class UsersService {
         email,
       },
     });
+  }
+
+  async createGuest() {
+    const user = this.usersRepository.create({
+      email: nanoid(10) + '@guest.com',
+      password: nanoid(10),
+      isGuest: true,
+    });
+
+    return await this.usersRepository.save(user);
   }
 
   async create(dto: RegisterDto) {
