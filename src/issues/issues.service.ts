@@ -172,6 +172,7 @@ export class IssuesService {
       Math.min(data.radius, this.MAX_RADIUS_METERS),
     );
 
+    let status = GroupStatusEnum.Active;
     const query = this.issueGroupsRepository
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.type', 'type')
@@ -179,7 +180,6 @@ export class IssuesService {
       .leftJoinAndSelect('issue.file', 'file')
       .leftJoinAndSelect('type.category', 'category')
       .where('group.lat <= :topLat', { topLat: topLeft.lat })
-      .andWhere('group.status = :status', { status: GroupStatusEnum.Active })
       .andWhere('group.lat >= :bottomLat', { bottomLat: bottomRight.lat })
       .andWhere('group.lon >= :topLon', { topLon: topLeft.lon })
       .andWhere('group.lon <= :bottomLon', { bottomLon: bottomRight.lon });
@@ -193,12 +193,14 @@ export class IssuesService {
       query.andWhere('group.resolverId = :resolverId', {
         resolverId: user.id,
       });
+      status = GroupStatusEnum.Resolved;
     }
     if (data.self && user) {
       query.andWhere('group.userId = :userId', {
         userId: user.id,
       });
     }
+    query.andWhere('group.status = :status', { status });
 
     return await query.getMany();
   }
