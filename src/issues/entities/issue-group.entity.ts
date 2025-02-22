@@ -16,6 +16,9 @@ export class IssueGroupEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  address: string;
+
   @Column({
     type: 'real',
   })
