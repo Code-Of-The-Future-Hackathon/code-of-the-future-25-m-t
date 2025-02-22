@@ -26,3 +26,7 @@ protocol AuthMeCommunication {
 protocol CategoriesCommunication {
     func loadCategories() async throws -> [Category]
 }
+
+protocol ReportIssueCommunication {
+    func reportAnIssue(report: ReportBody) async throws -> ReportResponse 
+}

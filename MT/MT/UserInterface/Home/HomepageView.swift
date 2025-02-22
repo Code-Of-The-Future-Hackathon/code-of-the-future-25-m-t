@@ -24,6 +24,11 @@ struct HomepageView: View {
                     Text("Visible Height: \(String(format: "%.2f", viewModel.visibleHeightKm)) km")
                     Text("Top-Left: \(viewModel.topLeftCoordinate.latitude), \(viewModel.topLeftCoordinate.longitude)")
                     Text("Bottom-Right: \(viewModel.bottomRightCoordinate.latitude), \(viewModel.bottomRightCoordinate.longitude)")
+                    Text("My Location: \(viewModel.myAddress)")
+                    Text("Top-Left Address: \(viewModel.topLeftAddress)")
+                    Text("Bottom-Right Address: \(viewModel.bottomRightAddress)")
+                    Text("Current Location: \(viewModel.myLocationAddress)")
+
                     Button(action: {
                         showCategoriesSheet.toggle()
                     }) {
@@ -51,6 +56,9 @@ struct HomepageView: View {
                     topLeftCoordinate: $viewModel.topLeftCoordinate,
                     bottomRightCoordinate: $viewModel.bottomRightCoordinate
                 )
+                .onAppear {
+                    viewModel.fetchCurrentLocation()
+                }
                 .onChange(of: region.center.latitude) {
                     viewModel.updateVisibleArea(region: region)
                 }
@@ -63,7 +71,18 @@ struct HomepageView: View {
             }
         }
         .sheet(isPresented: $showCategoriesSheet) {
-            CategoriesView(viewModel: CategoriesViewModel(communication: viewModel.communication))
+            CategoriesView(
+                viewModel: CategoriesViewModel(
+                    communication: viewModel.communication,
+                    proccedToReport: { issueType in
+                        DispatchQueue.main.async {
+                            viewModel.reportIssue(issueType: issueType)
+
+                            showCategoriesSheet = false
+                        }
+                    }
+                )
+            )
         }
     }
 }

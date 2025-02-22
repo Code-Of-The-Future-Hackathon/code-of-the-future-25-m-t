@@ -8,18 +8,53 @@
 import SwiftUI
 
 class ReportProblemViewModel: ObservableObject {
-    @Published var title: String = ""
+    @Published var title: String
     @Published var description: String = ""
     @Published var image: UIImage? = nil
     @Published var isShowingCamera = false
+
+    @Published var didFailReportingProblem: Bool = false
+    @Published var requestErrorMessage = ""
+
+    var issueType: IssueType
+    var lattitude: Double
+    var longitude: Double
+    var address: String?
+    let communication: ReportIssueCommunication
+    let goBack: Event
 
     var isSubmitDisabled: Bool {
         return title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    init(communication: ReportIssueCommunication,
+         lattitude: Double,
+         longitude: Double,
+         address: String? = nil,
+         issueType: IssueType,
+         goBack: @escaping Event) {
+        self.communication = communication
+        self.lattitude = lattitude
+        self.longitude = longitude
+        self.address = address
+        self.title = issueType.title
+        self.issueType = issueType
+        self.goBack = goBack
+    }
+
     func submitReport() {
-        print("Title: \(title)")
-        print("Description: \(description)")
-        print("Image: \(image != nil ? "Attached" : "None")")
+        Task { @MainActor in
+            do {
+                let _ = try await communication.reportAnIssue(report: ReportBody(
+                    description: description,
+                    address: address,
+                    lat: lattitude,
+                    lon: longitude,
+                    typeId: issueType.id))
+            } catch {
+                didFailReportingProblem = true
+                requestErrorMessage = error.customErrorMessage("Could not report a problem.")
+            }
+        }
     }
 }

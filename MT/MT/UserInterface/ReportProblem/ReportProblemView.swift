@@ -8,19 +8,31 @@
 import SwiftUI
 
 struct ReportProblemView: View {
-    @StateObject private var viewModel = ReportProblemViewModel()
+    @StateObject var viewModel: ReportProblemViewModel
+
+    var heading: some View {
+        ZStack {
+            TypographyText(text: "Report problem", typography: .bigHeading)
+
+            HStack {
+                Button(action: viewModel.goBack) {
+                    Image(systemName: "arrow.backward")
+                }
+
+                Spacer()
+            }
+        }
+    }
 
     var body: some View {
         VStack(spacing: 16) {
-            TypographyText(text: "Report problem", typography: .bigHeading)
+            heading
 
             TextField("Title*", text: $viewModel.title)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal)
 
             TextField("Description (Optional)", text: $viewModel.description)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal)
 
             Spacer()
 
@@ -30,26 +42,22 @@ struct ReportProblemView: View {
                     .scaledToFit()
                     .frame(height: 150)
                     .cornerRadius(10)
-                    .padding(.horizontal)
             }
 
             Spacer()
 
-//            if viewModel.isUploadEnabled {
-                Button(action: {
-                    viewModel.isShowingCamera = true
-                }) {
-                    HStack {
-                        Image(systemName: "camera.fill")
-                        Text(viewModel.image == nil ? "Upload Image" : "Retake Image")
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue.opacity(0.2))
-                    .cornerRadius(10)
+            Button(action: {
+                viewModel.isShowingCamera = true
+            }) {
+                HStack {
+                    Image(systemName: "camera.fill")
+                    Text(viewModel.image == nil ? "Upload Image" : "Retake Image")
                 }
-                .padding(.horizontal)
-//            }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.blue.opacity(0.2))
+                .cornerRadius(10)
+            }
 
             Button(action: {
                 viewModel.submitReport()
@@ -63,16 +71,16 @@ struct ReportProblemView: View {
                     .cornerRadius(10)
             }
             .disabled(viewModel.isSubmitDisabled)
-            .padding(.horizontal)
         }
         .sheet(isPresented: $viewModel.isShowingCamera) {
             CameraView(image: $viewModel.image)
         }
         .navigationBarBackButtonHidden()
         .padding(.top, 16)
+        .padding(.horizontal)
     }
 }
 
-#Preview {
-    ReportProblemView()
-}
+//#Preview {
+//    ReportProblemView(viewModel: ReportProblemViewModel(communication: <#any ReportIssueCommunication#>, issueType: IssueType(id: 1, title: "Test"), goBack: {}))
+//}

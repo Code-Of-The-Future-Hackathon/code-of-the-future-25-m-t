@@ -246,3 +246,57 @@ extension CommunicationManager: CategoriesCommunication {
                                          headers: defaultHeaders))
     }
 }
+
+//extension CommunicationManager: ReportIssueCommunication {
+//    func reportAnIssue(report: ReportBody) async throws -> ReportResponse {
+//        let endpoint = Constants.RequestEndpoint.reportAnIssue
+//
+//        var parameters: Parameters = [
+//            "lat": report.lat,
+//            "lon": report.lon,
+//            "typeId": report.typeId
+//        ]
+//
+//        if let description = report.description {
+//            parameters["description"] = description
+//        }
+//
+//        if let address = report.address {
+//            parameters["address"] = address
+//        }
+//
+//        return try await execute(Request(endpoint,
+//                                         headers: defaultHeaders,
+//                                         parameters: parameters))
+//    }
+//}
+
+extension CommunicationManager: ReportIssueCommunication {
+    func reportAnIssue(report: ReportBody) async throws -> ReportResponse {
+        let endpoint = Constants.RequestEndpoint.reportAnIssue
+        let headers: HTTPHeaders = defaultHeaders
+
+        var parameters: Parameters = [
+            "lat": report.lat,
+            "lon": report.lon,
+            "typeId": report.typeId
+        ]
+
+        if let description = report.description {
+            parameters["description"] = description
+        }
+
+        if let address = report.address {
+            parameters["address"] = address
+        }
+
+        return try await execute(
+            Request(
+                endpoint,
+                headers: headers,
+                encoding: JSONEncoding.default,
+                parameters: parameters
+            )
+        )
+    }
+}

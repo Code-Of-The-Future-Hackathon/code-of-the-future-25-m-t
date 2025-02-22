@@ -10,6 +10,7 @@ import SwiftUI
 struct CategoriesView: View {
     @StateObject var viewModel: CategoriesViewModel
     @State private var expandedCategoryID: Int? = nil
+    @Namespace private var animationNamespace
 
     var body: some View {
         VStack(spacing: .zero) {
@@ -18,50 +19,56 @@ struct CategoriesView: View {
 
             List {
                 ForEach(viewModel.categories) { category in
-                    VStack(alignment: .leading, spacing: 4) { // Reduce spacing here
-                        Button(action: {
-//                            withAnimation {
-                                if expandedCategoryID == category.id {
-                                    expandedCategoryID = nil // Collapse if already open
-                                } else {
-                                    expandedCategoryID = category.id // Expand
-                                }
-//                            }
-                        }) {
-                            HStack {
-                                TypographyText(text: category.icon, typography: .body)
-
-                                TypographyText(text: category.title, typography: .body)
-
-                                Spacer()
-
-                                Image(systemName: expandedCategoryID == category.id ? "chevron.up" : "chevron.down")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding(.vertical, 8)
-                            .contentShape(Rectangle())
+                    Button {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8, blendDuration: 0.2)) {
+                            expandedCategoryID = (expandedCategoryID == category.id) ? nil : category.id
                         }
-                        .buttonStyle(PlainButtonStyle()) // Removes default button styling
-
-                        // Show subcategories when expanded
-                        if expandedCategoryID == category.id {
-                            ForEach(category.types) { issueType in
-                                HStack {
-                                    TypographyText(text: "• \(issueType.title)", typography: .body3)
-                                        .foregroundColor(.gray)
-                                        .padding(.leading, 24) // Indent subcategories
-                                    Spacer()
-                                }
-                                .padding(.vertical, 4)
-                            }
-                            .transition(.opacity.combined(with: .move(edge: .top))) // Smooth animation
+                    } label: {
+                        HStack {
+                            TypographyText(text: category.icon, typography: .body)
+                            TypographyText(text: category.title, typography: .body)
+                            Spacer()
+                            Image(systemName: expandedCategoryID == category.id ? "chevron.up" : "chevron.down")
+                                .foregroundColor(.gray)
+                                .matchedGeometryEffect(id: "arrow\(category.id)", in: animationNamespace)
                         }
+                        .padding(.vertical, 8)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .background(Color.white)
+                    .contentShape(Rectangle())
 
-                        Divider() // Separator between categories
+                    if expandedCategoryID == category.id {
+                        VStack(spacing: 4) {
+                            ForEach(category.types, id: \.id) { issueType in
+                                Button {
+                                    DispatchQueue.main.async {
+                                        viewModel.proccedToReport(issueType)
+                                    }
+
+                                    expandedCategoryID = nil
+                                } label: {
+                                    HStack {
+                                        TypographyText(text: "\(issueType.title)", typography: .body2)
+                                            .foregroundColor(.gray)
+                                            .padding(.leading, 24)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                                .padding(.vertical, 6)
+                                .background(Color.white)
+                                .contentShape(Rectangle())
+
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .background(Color.white)
                     }
                 }
             }
-            .listStyle(PlainListStyle()) // Use plain style to reduce spacing
+            .listStyle(PlainListStyle())
         }
         .navigationBarBackButtonHidden()
         .alert("Fetching categories failed", isPresented: $viewModel.didFailFetchingCategories) {
