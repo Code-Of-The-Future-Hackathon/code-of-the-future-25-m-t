@@ -12,6 +12,7 @@ import { SeedingModule } from './seeding/seeding.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { IssuesModule } from './issues/issues.module';
+import { SensorsModule } from './sensors/sensors.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { IssuesModule } from './issues/issues.module';
     SeedingModule,
     FilesModule,
     IssuesModule,
+    SensorsModule,
   ],
   controllers: [],
   providers: [
