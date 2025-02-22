@@ -22,3 +22,11 @@ protocol GoogleAuthCommunication {
 protocol AuthMeCommunication {
     func getMyProfile() async throws -> User
 }
+
+protocol CategoriesCommunication {
+    func loadCategories() async throws -> [Category]
+}
+
+protocol ReportIssueCommunication {
+    func reportAnIssue(report: ReportBody) async throws -> ReportResponse 
+}
