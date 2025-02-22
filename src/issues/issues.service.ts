@@ -193,32 +193,22 @@ export class IssuesService {
   }
 
   async findUserGroups(user: UserEntity) {
-    return await this.issueGroupsRepository
-      .createQueryBuilder('group')
-      .leftJoinAndSelect('group.type', 'type')
-      .leftJoinAndSelect('group.issues', 'issue')
-      .leftJoinAndSelect('issue.file', 'file')
-      .leftJoinAndSelect('type.category', 'category')
-      .where('group.userId = :userId', {
-        userId: user.id,
-      })
-      .orderBy('group.id', 'DESC')
-      .getMany();
+    return await this.issueGroupsRepository.find({
+      where: { issues: { user: { id: user.id } } },
+      relations: ['type', 'issues', 'issues.file', 'type.category'],
+      order: { id: 'DESC' },
+    });
   }
 
   async findUserResolvedIssues(user: UserEntity) {
-    return await this.issueGroupsRepository
-      .createQueryBuilder('group')
-      .leftJoinAndSelect('group.type', 'type')
-      .leftJoinAndSelect('group.issues', 'issue')
-      .leftJoinAndSelect('issue.file', 'file')
-      .leftJoinAndSelect('type.category', 'category')
-      .where('group.resolverId = :userId', {
-        userId: user.id,
-      })
-      .andWhere('group.status = :status', { status: GroupStatusEnum.Resolved })
-      .orderBy('group.id', 'DESC')
-      .getMany();
+    return await this.issueGroupsRepository.find({
+      where: {
+        resolver: { id: user.id },
+        status: GroupStatusEnum.Resolved,
+      },
+      relations: ['type', 'issues', 'issues.file', 'type.category'],
+      order: { id: 'DESC' },
+    });
   }
 
   async findGroupsWithDetails(data: GetGroupsDto) {
