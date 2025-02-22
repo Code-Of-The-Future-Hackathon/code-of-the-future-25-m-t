@@ -1,14 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserEntity } from 'src/users/entities';
 import { CategoriesService } from 'src/categories/categories.service';
 import { FilesService } from 'src/files/files.service';
+import { UsersService } from 'src/users/users.service';
 
 import { IssueEntity, IssueGroupEntity } from './entities';
-import { CreateIssueDto } from './dto';
-import { IssueErrorCodes } from './errors';
+import { ChangeStatusDto, CreateIssueDto } from './dto';
 import { GetGroupsDto } from './dto/get-groups.dto';
+import { GroupStatusEnum } from './enums';
+import { IssueErrorCodes } from './errors';
 
 @Injectable()
 export class IssuesService {
@@ -21,6 +23,7 @@ export class IssuesService {
     private readonly issueGroupsRepository: Repository<IssueGroupEntity>,
     private readonly categoriesService: CategoriesService,
     private readonly filesService: FilesService,
+    private readonly usersService: UsersService,
   ) {}
 
   toDegrees(radians: number) {
@@ -87,7 +90,11 @@ export class IssuesService {
   }
 
   async addToGroupsOrCreate(issue: IssueEntity) {
-    const groups = await this.findAllGroups({lat: issue.lat, lon: issue.lon, radius: 10});
+    const groups = await this.findAllGroups({
+      lat: issue.lat,
+      lon: issue.lon,
+      radius: 10,
+    });
     if (groups.length) {
       groups.forEach((group) => {
         if (!group.address) group.address = issue.address;
@@ -129,11 +136,13 @@ export class IssuesService {
       .where('group.lat <= :topLat', { topLat: topLeft.lat })
       .andWhere('group.lat >= :bottomLat', { bottomLat: bottomRight.lat })
       .andWhere('group.lon >= :topLon', { topLon: topLeft.lon })
-      .andWhere('group.lon <= :bottomLon', { bottomLon: bottomRight.lon })
+      .andWhere('group.lon <= :bottomLon', { bottomLon: bottomRight.lon });
 
-      if (data.categoryId) {
-        query.andWhere('type.categoryId = :categoryId', { categoryId: data.categoryId });
-      }
+    if (data.categoryId) {
+      query.andWhere('type.categoryId = :categoryId', {
+        categoryId: data.categoryId,
+      });
+    }
 
     return await query.getMany();
   }
@@ -141,30 +150,56 @@ export class IssuesService {
   async findGroupsWithDetails(data: GetGroupsDto) {
     const groups = await this.findAllGroups(data);
 
-    return groups.map((group) => {
+    const mappedGroups = groups.map((group) => {
       return {
         ...group,
-        distance: this.haversineDistance(data.lat, data.lon, group.lat, group.lon),
+        distance: this.haversineDistance(
+          data.lat,
+          data.lon,
+          group.lat,
+          group.lon,
+        ),
       };
     });
+
+    if (data.sort) {
+      return mappedGroups.sort((g1, g2) => g1.distance - g2.distance);
+    }
+
+    return mappedGroups;
   }
 
-  async findOne(id: number) {
-    return await this.issueRepository.findOne({
-      relations: ['type', 'type.category', 'user', 'file'],
-      where: {
-        id,
-      },
+  async findOneGroup(id: number) {
+    return await this.issueGroupsRepository.findOneOrFail({
+      where: { id },
+      relations: ['type', 'issues', 'issues.user'],
     });
   }
 
-  async findOneOrFail(id: number) {
-    const issue = await this.findOne(id);
+  async findOneGroupOrFail(id: number) {
+    const group = await this.findOneGroup(id);
 
-    if (!issue) {
-      throw new BadRequestException(IssueErrorCodes.IssueNotFoundError);
+    if (!group) {
+      throw new BadRequestException(IssueErrorCodes.GroupNotFoundError);
     }
 
-    return issue;
+    return group;
+  }
+
+  async changeStatus(id: number, dto: ChangeStatusDto) {
+    const group = await this.findOneGroupOrFail(id);
+
+    if (group.status === dto.status) {
+      return group;
+    }
+
+    if (dto.status === GroupStatusEnum.Resolved) {
+      group.issues.forEach((issue) => {
+        void this.usersService.incrUserPoints(issue.user.id, 10);
+      });
+    }
+    group.status = dto.status;
+
+    return await this.issueGroupsRepository.save(group);
   }
 }

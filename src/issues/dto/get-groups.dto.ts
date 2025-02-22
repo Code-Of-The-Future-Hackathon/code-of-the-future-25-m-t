@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class GetGroupsDto {
   @ApiProperty()
@@ -26,4 +26,12 @@ export class GetGroupsDto {
   @IsNumber()
   @Type(() => Number)
   categoryId?: number;
+
+  @ApiProperty({
+    required: false,
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  sort?: boolean;
 }

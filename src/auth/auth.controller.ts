@@ -29,6 +29,11 @@ export class AuthController {
     return await this.authService.register(dto);
   }
 
+  @Post('register-guest')
+  async registerGuest() {
+    return await this.authService.registerGuest();
+  }
+
   @UseGuards(LocalAuthGuard)
   @ApiBody({ type: LoginDto })
   @Post('login')
