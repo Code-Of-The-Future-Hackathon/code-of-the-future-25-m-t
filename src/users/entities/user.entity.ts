@@ -48,6 +48,7 @@ export class UserEntity {
   })
   googleId: string;
 
+  @Exclude()
   @Column({
     nullable: true,
   })
