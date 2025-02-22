@@ -21,7 +21,7 @@ export class GetGroupsDto {
   @Type(() => Number)
   radius: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
