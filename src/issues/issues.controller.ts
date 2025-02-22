@@ -44,12 +44,14 @@ export class IssuesController {
     return await this.issuesService.findGroupsWithDetails(query);
   }
 
+  @ApiBearerAuth('AccessToken')
   @UseGuards(JwtAuthGuard)
   @Get('active/self')
   async findSelf(@Request() req: RequestWithUser) {
     return await this.issuesService.findUserGroups(req.user);
   }
 
+  @ApiBearerAuth('AccessToken')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Role(UserRoles.Admin)
   @Get('resolved/admin')
