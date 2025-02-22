@@ -29,6 +29,18 @@ struct ReportResponse: Codable, Identifiable {
     struct ReportUser: Codable {
         let id: String
     }
+
+    var distanceInKm: String {
+        if let distance {
+            if distance < 500 {
+                return String(format: "%.0f m", distance)
+            } else {
+                return String(format: "%.2f km", distance / 1000)
+            }
+        } else {
+            return ""
+        }
+    }
 }
 
 struct Issue: Codable {
