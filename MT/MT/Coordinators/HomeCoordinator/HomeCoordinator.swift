@@ -28,6 +28,9 @@ class HomeCoordinator: Coordinator, ObservableObject {
         initialDestination = .main(viewModel: homeViewModel)
 
         homeViewModel.openReportProblem = navigateToReport
+        homeViewModel.openReportDetail = { [weak self] report in
+            self?.navigateToDetail(report: report)
+        }
         homeViewModel.openReportsList = navigateToReportsList
     }
 
@@ -41,6 +44,12 @@ class HomeCoordinator: Coordinator, ObservableObject {
         print("✅ Processing SINGLE report for: \(issueType.title) | ID: \(issueType.id)")
 
         path.append(.reportProblem(viewModel: ReportProblemViewModel(communication: communication, lattitude: lat, longitude: lon, address: address, issueType: issueType, goBack: removeLastPath)))
+    }
+
+    private func navigateToDetail(report: ReportResponse) {
+        let detailVM = ReportDetailViewModel(report: report, goBack: removeLastPath)
+        path.append(.reportDetail(viewModel: detailVM))
+
     }
 
     private func navigateToReportsList(currentRegion: MKCoordinateRegion, visibleHeightKm: Double) {

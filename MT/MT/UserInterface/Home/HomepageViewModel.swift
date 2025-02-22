@@ -31,6 +31,7 @@ class HomepageViewModel: ObservableObject {
     private let locationManager = CLLocationManager()
 
     var openReportProblem: ReportProblemEvent?
+    var openReportDetail: ReportResponseEvent?
     var openReportsList: ReportsListEvent?
 
     init(communication: HomeCommunication) {
