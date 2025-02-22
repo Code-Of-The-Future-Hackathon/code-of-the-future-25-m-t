@@ -15,6 +15,7 @@ import { IssueErrorCodes } from './errors';
 @Injectable()
 export class IssuesService {
   private readonly EARTH_RADIUS = 6378000;
+  private readonly MAX_RADIUS_METERS = 20_000;
 
   constructor(
     @InjectRepository(IssueEntity)
@@ -126,7 +127,7 @@ export class IssuesService {
     const { topLeft, bottomRight } = this.boundingBox(
       data.lat,
       data.lon,
-      data.radius,
+      Math.min(data.radius, this.MAX_RADIUS_METERS),
     );
 
     const query = this.issueGroupsRepository
