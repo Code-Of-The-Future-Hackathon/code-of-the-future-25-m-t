@@ -12,9 +12,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { SensorEntity } from 'src/sensors/entities';
 
 import { IssueGroupEntity } from './issue-group.entity';
-import { SensorEntity } from 'src/sensors/entities';
 
 @Entity('issue')
 export class IssueEntity {

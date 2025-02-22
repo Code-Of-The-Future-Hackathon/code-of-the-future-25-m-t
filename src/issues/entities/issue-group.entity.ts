@@ -10,6 +10,7 @@ import {
 import { TypeEntity } from 'src/categories/entities';
 
 import { GroupStatusEnum, ReporterEnum } from '../enums';
+import { CostEstimateType } from '../types';
 
 import { IssueEntity } from './issue.entity';
 
@@ -44,6 +45,13 @@ export class IssueGroupEntity {
     default: GroupStatusEnum.Active,
   })
   status: GroupStatusEnum;
+
+  @Column({
+    type: 'jsonb',
+    nullable: true,
+    default: null,
+  })
+  costEstimates: CostEstimateType[];
 
   @ManyToOne(() => TypeEntity, (type) => type.groups)
   type: TypeEntity;

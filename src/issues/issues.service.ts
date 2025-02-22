@@ -5,13 +5,15 @@ import { UserEntity } from 'src/users/entities';
 import { CategoriesService } from 'src/categories/categories.service';
 import { FilesService } from 'src/files/files.service';
 import { UsersService } from 'src/users/users.service';
+import { SensorEntity } from 'src/sensors/entities';
+import { AiService } from 'src/ai/ai.service';
+import { TypeEntity } from 'src/categories/entities';
 
 import { IssueEntity, IssueGroupEntity } from './entities';
 import { ChangeStatusDto, CreateIssueDto } from './dto';
 import { GetGroupsDto } from './dto/get-groups.dto';
 import { GroupStatusEnum, ReporterEnum } from './enums';
 import { IssueErrorCodes } from './errors';
-import { SensorEntity } from 'src/sensors/entities';
 
 @Injectable()
 export class IssuesService {
@@ -27,6 +29,7 @@ export class IssuesService {
     private readonly categoriesService: CategoriesService,
     private readonly filesService: FilesService,
     private readonly usersService: UsersService,
+    private readonly aiService: AiService,
   ) {}
 
   toDegrees(radians: number) {
@@ -77,7 +80,10 @@ export class IssuesService {
       ? await this.filesService.uploadFile(file)
       : undefined;
 
-    const type = await this.categoriesService.findOneTypeOrFail(dto.typeId);
+    const type = await this.categoriesService.findOneTypeOrFail(
+      dto.typeId,
+      true,
+    );
     const issue = this.issueRepository.create({
       ...dto,
       type: {
@@ -90,13 +96,16 @@ export class IssuesService {
     });
 
     const issueEntity = await this.issueRepository.save(issue);
-    await this.addToGroupsOrCreate(issueEntity);
+    await this.addToGroupsOrCreate(issueEntity, type);
 
     return issueEntity;
   }
 
   async createBySensor(sensor: SensorEntity, dto: CreateIssueDto) {
-    const type = await this.categoriesService.findOneTypeOrFail(dto.typeId);
+    const type = await this.categoriesService.findOneTypeOrFail(
+      dto.typeId,
+      true,
+    );
     const issue = this.issueRepository.create({
       ...dto,
       type: {
@@ -108,12 +117,12 @@ export class IssuesService {
     });
 
     const issueEntity = await this.issueRepository.save(issue);
-    await this.addToGroupsOrCreate(issueEntity);
+    await this.addToGroupsOrCreate(issueEntity, type);
 
     return issueEntity;
   }
 
-  async addToGroupsOrCreate(issue: IssueEntity) {
+  async addToGroupsOrCreate(issue: IssueEntity, type: TypeEntity) {
     const reporter = issue.user ? ReporterEnum.User : ReporterEnum.Sensor;
     const groups = await this.findAllGroups({
       lat: issue.lat,
@@ -131,6 +140,11 @@ export class IssuesService {
       return await this.issueGroupsRepository.save(groups);
     }
 
+    const costEstimates = await this.aiService.estimateCost(
+      issue.description,
+      type,
+    );
+
     const group = this.issueGroupsRepository.create({
       address: issue.address,
       lat: issue.lat,
@@ -144,6 +158,7 @@ export class IssuesService {
           id: issue.id,
         },
       ],
+      costEstimates,
     });
 
     return await this.issueGroupsRepository.save(group);
