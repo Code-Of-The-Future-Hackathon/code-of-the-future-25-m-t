@@ -27,6 +27,11 @@ export class UserEntity {
   lastName: string;
 
   @Column({
+    nullable: true,
+  })
+  title?: string;
+
+  @Column({
     unique: true,
   })
   email: string;

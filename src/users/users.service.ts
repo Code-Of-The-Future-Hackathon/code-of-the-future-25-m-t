@@ -31,6 +31,7 @@ export class UsersService {
       email: nanoid(10) + '@guest.com',
       password: nanoid(10),
       isGuest: true,
+      title: this.mapUserTitle(0),
     });
 
     return await this.usersRepository.save(user);
@@ -45,6 +46,7 @@ export class UsersService {
 
     const user = this.usersRepository.create({
       ...dto,
+      title: this.mapUserTitle(0),
     });
 
     return await this.usersRepository.save(user);
@@ -60,6 +62,7 @@ export class UsersService {
     const user = this.usersRepository.create({
       email,
       googleId,
+      title: this.mapUserTitle(0),
     });
 
     return await this.usersRepository.save(user);
@@ -124,10 +127,31 @@ export class UsersService {
   }
 
   async incrUserPoints(userId: string, points: number) {
-    return await this.usersRepository.increment(
-      { id: userId },
-      'points',
-      points,
-    );
+    const user = await this.findOneOrFail(userId);
+    user.points += points;
+    user.title = this.mapUserTitle(user.points);
+
+    return await this.usersRepository.save(user);
+  }
+
+  mapUserTitle(points: number) {
+    switch (true) {
+      case points >= 5000:
+        return 'Urban Legend';  
+      case points >= 1000:
+        return 'City Guardian';  
+      case points >= 500:
+        return 'Neighborhood Hero';  
+      case points >= 250:
+        return 'Street Sentry';  
+      case points >= 200:
+        return 'Pathfinder';  
+      case points >= 100:
+        return 'Community Watcher';  
+      case points >= 25:
+        return 'Local Reporter';  
+      default:
+        return 'Beginner';
+    }
   }
 }
