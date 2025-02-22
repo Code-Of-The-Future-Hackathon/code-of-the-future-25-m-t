@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-typealias HomeCommunication = CategoriesCommunication & ReportIssueCommunication
+typealias HomeCommunication = CategoriesCommunication & ReportIssueCommunication & GetAllReportsCommunication
 
 class HomeCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()

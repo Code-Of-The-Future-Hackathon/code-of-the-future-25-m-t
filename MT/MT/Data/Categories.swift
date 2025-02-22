@@ -7,14 +7,15 @@
 
 import Foundation
 
-struct Category: Decodable, Identifiable {
+struct Category: Codable, Identifiable {
     let id: Int
     let title: String
     let icon: String
-    let types: [IssueType]
+    let types: [IssueType]?
+    let supportsImages: Bool?
 }
 
-struct IssueType: Decodable, Identifiable {
+struct IssueType: Codable, Identifiable {
     let id: Int
     let title: String
 }

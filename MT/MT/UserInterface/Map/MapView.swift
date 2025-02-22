@@ -5,13 +5,14 @@
 //  Created by Mihail Kolev on 21/02/2025.
 //
 
-import SwiftUI
-import MapKit
 import CoreLocation
+import MapKit
+import SwiftUI
 
 struct MapView: View {
     @EnvironmentObject var locationManager: LocationManager
-    
+
+    var pointers: [ReportResponse]
     @Binding var region: MKCoordinateRegion
     @Binding var visibleWidthKm: Double
     @Binding var visibleHeightKm: Double
@@ -21,22 +22,53 @@ struct MapView: View {
     @State private var userLocationSet = false
 
     var body: some View {
-        Map(coordinateRegion: $region, showsUserLocation: true)
-            .ignoresSafeArea()
-            .onAppear {
-                locationManager.requestLocation()
-            }
-            .onReceive(locationManager.$location) { newLocation in
-                if let newLocation = newLocation, !userLocationSet {
-                    region.center = newLocation
-                    userLocationSet = true
+        Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: pointers) { pointer in
+            MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: pointer.lat, longitude: pointer.lon)) {
+                ZStack(alignment: .top) {
+                    if let icon = pointer.type.category?.icon {
+                        Image(.mapMarkerIcon)
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .foregroundStyle(.red)
+
+                        TypographyText(text: icon, typography: .body2)
+                            .padding(.top, 12)
+                            .background {
+                                Circle()
+                                    .fill(.white)
+                                    .frame(width: 26, height: 26)
+                                    .padding(.top, 16)
+                            }
+//                            .padding(.top, 10)
+
+                    } else {
+                        Image(.mapMarker)
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .foregroundStyle(.red)
+                    }
                 }
             }
+        }
+        .ignoresSafeArea()
+        .onAppear {
+            locationManager.requestLocation()
+        }
+        .onReceive(locationManager.$location) { newLocation in
+            if let newLocation = newLocation, !userLocationSet {
+                region.center = newLocation
+                userLocationSet = true
+            }
+        }
+        .mapControls {
+            MapUserLocationButton()
+        }
     }
 }
 
 #Preview {
     MapView(
+        pointers: [],
         region: .constant(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))),
         visibleWidthKm: .constant(0.0),
         visibleHeightKm: .constant(0.0),

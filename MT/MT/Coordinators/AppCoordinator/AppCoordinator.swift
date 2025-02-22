@@ -11,7 +11,7 @@ import KeychainSwift
 
 typealias Event = () -> Void
 typealias Communication = LoginCommunication & RegistrationCommunication & AuthMeCommunication & GoogleAuthCommunication
-    & CategoriesCommunication & ReportIssueCommunication
+    & CategoriesCommunication & ReportIssueCommunication & GetAllReportsCommunication
 
 class AppCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()

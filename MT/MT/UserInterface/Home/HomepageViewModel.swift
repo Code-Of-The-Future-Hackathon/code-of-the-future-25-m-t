@@ -12,7 +12,7 @@ import SwiftUI
 typealias ReportProblemEvent = (IssueType, Double, Double, String?) -> Void?
 
 class HomepageViewModel: ObservableObject {
-    let communication: CategoriesCommunication
+    let communication: HomeCommunication
 
     @Published var visibleWidthKm: Double = 0.0
     @Published var visibleHeightKm: Double = 0.0
@@ -24,12 +24,14 @@ class HomepageViewModel: ObservableObject {
     @Published var bottomRightAddress: String = ""
     @Published var myLocationAddress: String = ""
 
+    @Published var pointers: [ReportResponse] = []
+
     private var geocodeTimer: Timer?
     private let locationManager = CLLocationManager()
 
     var openReportProblem: ReportProblemEvent?
 
-    init(communication: CategoriesCommunication) {
+    init(communication: HomeCommunication) {
         self.communication = communication
 
         fetchCurrentLocation()
@@ -71,6 +73,7 @@ class HomepageViewModel: ObservableObject {
         geocodeTimer?.invalidate()
         geocodeTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
             self?.performGeocoding(region: region)
+            self?.getAllReports(region: region)
         }
     }
 
@@ -164,13 +167,28 @@ class HomepageViewModel: ObservableObject {
             }
         }
     }
+
+    func getAllReports(region: MKCoordinateRegion) {
+        Task { @MainActor in
+            do {
+                let loadedReports = try await communication.getAllReports(report: ReportGetBody(lat: region.center.latitude, lon: region.center.longitude, radius: visibleHeightKm * 1000))
+
+                pointers = loadedReports
+                print("### Loaded reports: \(loadedReports)")
+            } catch {
+//                didFailFetchingCategories = true
+//                requestErrorMessage = error.customErrorMessage("Could not fetch categories.")
+            }
+        }
+
+    }
 }
 
 class MockCategoriesCommunication: CategoriesCommunication {
     func loadCategories() async throws -> [Category] {
         return [
-            Category(id: 1, title: "Roads & Sidewalks", icon: "🛣️", types: [IssueType(id: 1, title: "Potholes")]),
-            Category(id: 2, title: "Streetlights & Electrical", icon: "💡", types: [IssueType(id: 6, title: "Streetlight Malfunctions")]),
+            Category(id: 1, title: "Roads & Sidewalks", icon: "🛣️", types: [IssueType(id: 1, title: "Potholes")], supportsImages: false),
+            Category(id: 2, title: "Streetlights & Electrical", icon: "💡", types: [IssueType(id: 6, title: "Streetlight Malfunctions")], supportsImages: false),
         ]
     }
 }

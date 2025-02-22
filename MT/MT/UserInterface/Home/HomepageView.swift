@@ -17,39 +17,40 @@ struct HomepageView: View {
     )
 
     var body: some View {
-        ZStack {
-            VStack {
-                VStack {
-                    Text("Visible Width: \(String(format: "%.2f", viewModel.visibleWidthKm)) km")
-                    Text("Visible Height: \(String(format: "%.2f", viewModel.visibleHeightKm)) km")
-                    Text("Top-Left: \(viewModel.topLeftCoordinate.latitude), \(viewModel.topLeftCoordinate.longitude)")
-                    Text("Bottom-Right: \(viewModel.bottomRightCoordinate.latitude), \(viewModel.bottomRightCoordinate.longitude)")
-                    Text("My Location: \(viewModel.myAddress)")
-                    Text("Top-Left Address: \(viewModel.topLeftAddress)")
-                    Text("Bottom-Right Address: \(viewModel.bottomRightAddress)")
-                    Text("Current Location: \(viewModel.myLocationAddress)")
-
-                    Button(action: {
-                        showCategoriesSheet.toggle()
-                    }) {
-                        HStack {
-                            Image(systemName: "list.bullet")
-                            Text("Show Categories")
-                                .font(.headline)
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
-                }
-                .padding()
-                .background(Color.white.opacity(0.8))
-                .cornerRadius(10)
-                .padding()
+        ZStack(alignment: .bottom) {
+//            VStack {
+//                VStack {
+//                    Text("Visible Width: \(String(format: "%.2f", viewModel.visibleWidthKm)) km")
+//                    Text("Visible Height: \(String(format: "%.2f", viewModel.visibleHeightKm)) km")
+//                    Text("Top-Left: \(viewModel.topLeftCoordinate.latitude), \(viewModel.topLeftCoordinate.longitude)")
+//                    Text("Bottom-Right: \(viewModel.bottomRightCoordinate.latitude), \(viewModel.bottomRightCoordinate.longitude)")
+//                    Text("My Location: \(viewModel.myAddress)")
+//                    Text("Top-Left Address: \(viewModel.topLeftAddress)")
+//                    Text("Bottom-Right Address: \(viewModel.bottomRightAddress)")
+//                    Text("Current Location: \(viewModel.myLocationAddress)")
+//
+//                    Button(action: {
+//                        showCategoriesSheet.toggle()
+//                    }) {
+//                        HStack {
+//                            Image(systemName: "list.bullet")
+//                            Text("Show Categories")
+//                                .font(.headline)
+//                        }
+//                        .padding()
+//                        .frame(maxWidth: .infinity)
+//                        .background(Color.blue)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(10)
+//                    }
+//                }
+//                .padding()
+//                .background(Color.white.opacity(0.8))
+//                .cornerRadius(10)
+//                .padding()
 
                 MapView(
+                    pointers: viewModel.pointers,
                     region: $region,
                     visibleWidthKm: $viewModel.visibleWidthKm,
                     visibleHeightKm: $viewModel.visibleHeightKm,
@@ -68,7 +69,43 @@ struct HomepageView: View {
                 .onChange(of: region.span.latitudeDelta) {
                     viewModel.updateVisibleArea(region: region)
                 }
+
+            HStack(spacing: 16) {
+                Button(action: {
+                    // showCategoriesSheet.toggle()
+                }) {
+                    Image(systemName: "list.bullet")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 28)
+                        .foregroundStyle(.blue)
+                        .padding(12)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                }
+                .frame(width: 50, height: 50)
+
+                Spacer()
+
+                Button(action: {
+                    showCategoriesSheet.toggle()
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32, height: 32)
+                        .foregroundStyle(.blue)
+                        .padding(12)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                }
+                .frame(width: 50, height: 50)
             }
+            .padding(.vertical, 28)
+            .padding(.horizontal, 8)
+            .background(Color.clear)
         }
         .sheet(isPresented: $showCategoriesSheet) {
             CategoriesView(
@@ -87,6 +124,6 @@ struct HomepageView: View {
     }
 }
 
-#Preview {
-    HomepageView(viewModel: HomepageViewModel(communication: MockCategoriesCommunication()))
-}
+//#Preview {
+//    HomepageView(viewModel: HomepageViewModel(communication: MockCategoriesCommunication()))
+//}

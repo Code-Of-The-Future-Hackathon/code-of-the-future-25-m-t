@@ -1,0 +1,26 @@
+<svg
+  width="64"
+  height="64"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+>
+  <!-- Outer pin shape plus inner circle “hole,” using even-odd fill. -->
+  <path
+    fill="#FF0000"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M12 2
+       C8.13 2 5 5.13 5 9
+       c0 5.52 7 13 7 13
+       s7-7.48 7-13
+       c0-3.87-3.13-7-7-7
+       Z
+       M12 12.5
+       c-1.93 0-3.5-1.57-3.5-3.5
+       0-1.93 1.57-3.5 3.5-3.5
+       1.93 0 3.5 1.57 3.5 3.5
+       0 1.93-1.57 3.5-3.5 3.5
+       Z"
+  />
+</svg>

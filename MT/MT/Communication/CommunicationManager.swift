@@ -247,30 +247,6 @@ extension CommunicationManager: CategoriesCommunication {
     }
 }
 
-//extension CommunicationManager: ReportIssueCommunication {
-//    func reportAnIssue(report: ReportBody) async throws -> ReportResponse {
-//        let endpoint = Constants.RequestEndpoint.reportAnIssue
-//
-//        var parameters: Parameters = [
-//            "lat": report.lat,
-//            "lon": report.lon,
-//            "typeId": report.typeId
-//        ]
-//
-//        if let description = report.description {
-//            parameters["description"] = description
-//        }
-//
-//        if let address = report.address {
-//            parameters["address"] = address
-//        }
-//
-//        return try await execute(Request(endpoint,
-//                                         headers: defaultHeaders,
-//                                         parameters: parameters))
-//    }
-//}
-
 extension CommunicationManager: ReportIssueCommunication {
     func reportAnIssue(report: ReportBody) async throws -> ReportResponse {
         let endpoint = Constants.RequestEndpoint.reportAnIssue
@@ -295,6 +271,36 @@ extension CommunicationManager: ReportIssueCommunication {
                 endpoint,
                 headers: headers,
                 encoding: JSONEncoding.default,
+                parameters: parameters
+            )
+        )
+    }
+}
+
+extension CommunicationManager: GetAllReportsCommunication {
+    func getAllReports(report: ReportGetBody) async throws -> [ReportResponse] {
+        let endpoint = Constants.RequestEndpoint.getIssues
+        let headers: HTTPHeaders = defaultHeaders
+
+        var parameters: Parameters = [
+            "lat": report.lat,
+            "lon": report.lon,
+            "radius": report.radius
+        ]
+
+        if let categoryId = report.categoryId {
+            parameters["categoryId"] = categoryId
+        }
+
+        if let sort = report.sort {
+            parameters["sort"] = sort
+        }
+
+        return try await execute(
+            Request(
+                endpoint,
+                headers: headers,
+                encoding: URLEncoding.default,
                 parameters: parameters
             )
         )

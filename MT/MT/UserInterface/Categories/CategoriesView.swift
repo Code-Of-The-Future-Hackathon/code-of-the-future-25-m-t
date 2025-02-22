@@ -34,34 +34,34 @@ struct CategoriesView: View {
                         }
                         .padding(.vertical, 8)
                     }
-                    .buttonStyle(PlainButtonStyle())
-                    .background(Color.white)
                     .contentShape(Rectangle())
+                    .background(Color.white)
 
                     if expandedCategoryID == category.id {
                         VStack(spacing: 4) {
-                            ForEach(category.types, id: \.id) { issueType in
-                                Button {
-                                    DispatchQueue.main.async {
-                                        viewModel.proccedToReport(issueType)
-                                    }
+                            if let types = category.types {
+                                ForEach(types, id: \.id) { issueType in
+                                    Button {
+                                        DispatchQueue.main.async {
+                                            viewModel.proccedToReport(issueType)
+                                        }
 
-                                    expandedCategoryID = nil
-                                } label: {
-                                    HStack {
-                                        TypographyText(text: "\(issueType.title)", typography: .body2)
-                                            .foregroundColor(.gray)
-                                            .padding(.leading, 24)
-                                        Spacer()
-                                        Image(systemName: "chevron.right")
-                                            .foregroundColor(.gray)
+                                        expandedCategoryID = nil
+                                    } label: {
+                                        HStack {
+                                            TypographyText(text: "\(issueType.title)", typography: .body2)
+                                                .foregroundColor(.gray)
+                                                .padding(.leading, 24)
+                                            Spacer()
+                                            Image(systemName: "chevron.right")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .contentShape(Rectangle())
                                     }
+                                    .padding(.vertical, 6)
+                                    .background(Color.white)
+                                    .buttonStyle(PlainButtonStyle())
                                 }
-                                .padding(.vertical, 6)
-                                .background(Color.white)
-                                .contentShape(Rectangle())
-
-                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                         .background(Color.white)

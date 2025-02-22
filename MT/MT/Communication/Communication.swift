@@ -30,3 +30,7 @@ protocol CategoriesCommunication {
 protocol ReportIssueCommunication {
     func reportAnIssue(report: ReportBody) async throws -> ReportResponse 
 }
+
+protocol GetAllReportsCommunication {
+    func getAllReports(report: ReportGetBody) async throws -> [ReportResponse]
+}
