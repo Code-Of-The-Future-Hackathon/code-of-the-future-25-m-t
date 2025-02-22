@@ -6,12 +6,15 @@ import { nanoid } from 'nanoid';
 import { CreateSensorDto, UpdateSensorDto } from './dto';
 import { SensorEntity } from './entities';
 import { SensorErrorCodes } from './errors';
+import { IssuesService } from 'src/issues/issues.service';
+import { CreateIssueDto } from 'src/issues/dto';
 
 @Injectable()
 export class SensorsService {
   constructor(
     @InjectRepository(SensorEntity)
     private sensorRepository: Repository<SensorEntity>,
+    private readonly issuesService: IssuesService,
   ) {}
 
   async create(dto: CreateSensorDto) {
@@ -62,5 +65,9 @@ export class SensorsService {
     const sensor = await this.findOneOrFail(id);
 
     return await this.sensorRepository.remove(sensor);
+  }
+
+  async notify(sensor: SensorEntity, data: CreateIssueDto) {
+    return await this.issuesService.createBySensor(sensor, data);
   }
 }
