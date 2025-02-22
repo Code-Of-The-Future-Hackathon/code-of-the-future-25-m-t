@@ -5,11 +5,11 @@ import { FilesModule } from 'src/files/files.module';
 
 import { IssuesService } from './issues.service';
 import { IssuesController } from './issues.controller';
-import { IssueEntity } from './entities';
+import { IssueEntity, IssueGroupEntity } from './entities';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([IssueEntity]),
+    TypeOrmModule.forFeature([IssueEntity, IssueGroupEntity]),
     CategoriesModule,
     FilesModule,
   ],

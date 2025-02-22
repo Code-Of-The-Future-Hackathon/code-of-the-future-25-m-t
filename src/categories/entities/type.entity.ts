@@ -5,7 +5,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { IssueEntity } from 'src/issues/entities';
+import { IssueEntity, IssueGroupEntity } from 'src/issues/entities';
 
 import { CategoryEntity } from './category.entity';
 
@@ -22,4 +22,7 @@ export class TypeEntity {
 
   @OneToMany(() => IssueEntity, (issue) => issue.type)
   issues: IssueEntity[];
+
+  @OneToMany(() => IssueGroupEntity, (issueGroup) => issueGroup.type)
+  groups: IssueGroupEntity[];
 }

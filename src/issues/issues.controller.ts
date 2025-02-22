@@ -39,6 +39,12 @@ export class IssuesController {
     return await this.issuesService.findAll();
   }
 
+  @ApiBearerAuth('AccessToken')
+  @Get('groups')
+  async findAllGroups() {
+    return await this.issuesService.findAllGroups();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.issuesService.findOne(+id);

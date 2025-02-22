@@ -6,10 +6,14 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { IssueGroupEntity } from './issue-group.entity';
 
 @Entity('issue')
 export class IssueEntity {
@@ -42,6 +46,10 @@ export class IssueEntity {
   @ManyToOne(() => UserEntity, (user) => user.issues)
   user: UserEntity;
 
+  @ManyToMany(() => IssueGroupEntity, (issueGroup) => issueGroup.issues)
+  @JoinTable()
+  groups: IssueGroupEntity[];
+
   @CreateDateColumn()
-  created: Date;
+  createdAt: Date;
 }
