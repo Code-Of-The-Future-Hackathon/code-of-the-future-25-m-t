@@ -25,16 +25,17 @@ struct CustomButton: View {
                 Spacer()
             }
             .padding(8)
+            .frame(height: 48)
             .background {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: 8)
                         .foregroundStyle(Color(.systemBlue).opacity(0.8))
 
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: 8)
                         .stroke(Color(.systemBlue).opacity(0.7), lineWidth: 1)
                 }
             }
-            .clipShape(Rectangle())
+            .contentShape(Rectangle())
         }
     }
 }

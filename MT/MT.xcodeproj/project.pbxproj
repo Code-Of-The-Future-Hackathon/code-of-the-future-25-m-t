@@ -439,6 +439,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MT/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReportIt;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Need camera access to take photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need your permission to show your location on the map. You would be able to see points of interest around you.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your permission to show your location on the map. You would be able to see points of interest around you.";
@@ -476,6 +477,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MT/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReportIt;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Need camera access to take photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need your permission to show your location on the map. You would be able to see points of interest around you.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your permission to show your location on the map. You would be able to see points of interest around you.";

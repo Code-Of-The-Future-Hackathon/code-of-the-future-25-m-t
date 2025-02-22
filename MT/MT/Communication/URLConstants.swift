@@ -30,6 +30,7 @@ extension Constants {
         case reportAnIssue
         case getIssues
         case updateIssueStatus
+        case continueAsGuest
 
         static var serverURL = "https://cotf.alexognyanov.xyz/api"
     }
@@ -56,6 +57,8 @@ extension Constants.RequestEndpoint: URLConvertible {
             return Self.serverURL + "/issues"
         case .updateIssueStatus:
             return Self.serverURL + "/issues/status"
+        case .continueAsGuest:
+            return Self.serverURL + "/auth/register-guest"
         }
     }
 }
@@ -63,7 +66,7 @@ extension Constants.RequestEndpoint: URLConvertible {
 extension Constants.RequestEndpoint: HTTPMethodConvertible {
     var method: HTTPMethod {
         switch self {
-        case .login, .registration, .googleAuth, .refreshToken, .reportAnIssue:
+        case .login, .registration, .googleAuth, .refreshToken, .reportAnIssue, .continueAsGuest:
             return .post
         case .getMyProfile, .getCategories, .getIssues:
             return .get

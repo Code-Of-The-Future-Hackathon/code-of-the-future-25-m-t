@@ -353,3 +353,12 @@ extension CommunicationManager: UpdateIssueStatusCommunication {
                                          parameters: parameters))
     }
 }
+
+extension CommunicationManager: ContinueAsGuestCommunication {
+    func continueAsGuest() async throws -> Tokens {
+        let endpoint = Constants.RequestEndpoint.continueAsGuest
+
+        return try await execute(Request(endpoint,
+                                         headers: defaultHeaders))
+    }
+}
