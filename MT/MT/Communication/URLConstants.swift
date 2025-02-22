@@ -29,6 +29,7 @@ extension Constants {
         case getCategories
         case reportAnIssue
         case getIssues
+        case updateIssueStatus
 
         static var serverURL = "https://cotf.alexognyanov.xyz/api"
     }
@@ -53,6 +54,8 @@ extension Constants.RequestEndpoint: URLConvertible {
             return Self.serverURL + "/categories"
         case .reportAnIssue, .getIssues:
             return Self.serverURL + "/issues"
+        case .updateIssueStatus:
+            return Self.serverURL + "/issues/status"
         }
     }
 }
@@ -64,7 +67,7 @@ extension Constants.RequestEndpoint: HTTPMethodConvertible {
             return .post
         case .getMyProfile, .getCategories, .getIssues:
             return .get
-        case .pushToken:
+        case .pushToken, .updateIssueStatus:
             return .patch
         }
     }

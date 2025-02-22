@@ -16,6 +16,7 @@ class ReportProblemViewModel: ObservableObject {
     @Published var didFailReportingProblem: Bool = false
     @Published var requestErrorMessage = ""
 
+    var supportsImages: Bool
     var issueType: IssueType
     var lattitude: Double
     var longitude: Double
@@ -32,6 +33,7 @@ class ReportProblemViewModel: ObservableObject {
          longitude: Double,
          address: String? = nil,
          issueType: IssueType,
+         supportsImages: Bool,
          goBack: @escaping Event) {
         self.communication = communication
         self.lattitude = lattitude
@@ -39,6 +41,7 @@ class ReportProblemViewModel: ObservableObject {
         self.address = address
         self.title = issueType.title
         self.issueType = issueType
+        self.supportsImages = supportsImages
         self.goBack = goBack
     }
 
@@ -52,6 +55,8 @@ class ReportProblemViewModel: ObservableObject {
                     lon: longitude,
                     typeId: issueType.id,
                     file: image))
+
+                goBack()
             } catch {
                 didFailReportingProblem = true
                 requestErrorMessage = error.customErrorMessage("Could not report a problem.")

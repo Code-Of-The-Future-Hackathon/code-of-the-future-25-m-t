@@ -340,3 +340,16 @@ extension CommunicationManager: GetAllReportsCommunication {
         )
     }
 }
+
+extension CommunicationManager: UpdateIssueStatusCommunication {
+    func updateIssueStatus(reportId: Int, status: ReportStatus) async throws -> EmptyResponse {
+        let endpoint = Constants.RequestEndpoint.updateIssueStatus
+        let parameters: Parameters = ["id": reportId,
+                                      "status": status.rawValue]
+
+        return try await execute(Request(endpoint,
+                                         headers: defaultHeaders,
+                                         encoding: JSONEncoding.default,
+                                         parameters: parameters))
+    }
+}
