@@ -12,6 +12,7 @@ extension KeychainSwift {
     enum KeychainConstants: String {
         case token
         case profile
+        case pushToken
     }
 
     var authToken: Tokens? {
@@ -43,6 +44,22 @@ extension KeychainSwift {
                 return
             }
             set(encodedValue, forKey: KeychainConstants.profile.rawValue, withAccess: .accessibleAfterFirstUnlockThisDeviceOnly)
+        }
+    }
+
+    var pushToken: String? {
+        get {
+            guard let encodedValue = getData(KeychainConstants.pushToken.rawValue),
+                  let tokenInfo = try? JSONDecoder().decode(String.self, from: encodedValue) else { return nil }
+
+            return tokenInfo
+        }
+        set(value) {
+            guard let encodedValue = try? JSONEncoder().encode(value) else {
+                delete(KeychainConstants.pushToken.rawValue)
+                return
+            }
+            set(encodedValue, forKey: KeychainConstants.pushToken.rawValue, withAccess: .accessibleAfterFirstUnlockThisDeviceOnly)
         }
     }
 

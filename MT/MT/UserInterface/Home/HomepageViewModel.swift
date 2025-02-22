@@ -10,6 +10,7 @@ import MapKit
 import SwiftUI
 
 typealias ReportProblemEvent = (IssueType, Double, Double, String?) -> Void?
+typealias ReportsListEvent = (MKCoordinateRegion, Double) -> Void?
 
 class HomepageViewModel: ObservableObject {
     let communication: HomeCommunication
@@ -31,6 +32,7 @@ class HomepageViewModel: ObservableObject {
 
     var openReportProblem: ReportProblemEvent?
     var openReportDetail: ReportResponseEvent?
+    var openReportsList: ReportsListEvent?
 
     init(communication: HomeCommunication) {
         self.communication = communication

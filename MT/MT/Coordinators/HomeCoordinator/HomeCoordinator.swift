@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 typealias HomeCommunication = CategoriesCommunication & ReportIssueCommunication & GetAllReportsCommunication
 
@@ -30,7 +31,7 @@ class HomeCoordinator: Coordinator, ObservableObject {
         homeViewModel.openReportDetail = { [weak self] report in
             self?.navigateToDetail(report: report)
         }
-
+        homeViewModel.openReportsList = navigateToReportsList
     }
 
     @ViewBuilder
@@ -39,6 +40,7 @@ class HomeCoordinator: Coordinator, ObservableObject {
     }
 
     private func navigateToReport(issueType: IssueType, lat: Double, lon: Double, address: String? = nil) {
+        hideTabBar = true
         print("✅ Processing SINGLE report for: \(issueType.title) | ID: \(issueType.id)")
 
         path.append(.reportProblem(viewModel: ReportProblemViewModel(communication: communication, lattitude: lat, longitude: lon, address: address, issueType: issueType, goBack: removeLastPath)))
@@ -47,6 +49,15 @@ class HomeCoordinator: Coordinator, ObservableObject {
     private func navigateToDetail(report: ReportResponse) {
         let detailVM = ReportDetailViewModel(report: report, goBack: removeLastPath)
         path.append(.reportDetail(viewModel: detailVM))
+
+    }
+
+    private func navigateToReportsList(currentRegion: MKCoordinateRegion, visibleHeightKm: Double) {
+        hideTabBar = true
+
+        let viewModel = RepostsListViewModel(communication: communication, visibleHeightKm: visibleHeightKm, currentRegion: currentRegion, goBack: removeLastPath)
+
+        path.append(.reportsList(viewModel: viewModel))
     }
 
     func removeLastPath() {

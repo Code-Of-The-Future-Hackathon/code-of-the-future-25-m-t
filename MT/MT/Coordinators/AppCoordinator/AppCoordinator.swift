@@ -11,7 +11,7 @@ import KeychainSwift
 
 typealias Event = () -> Void
 typealias Communication = LoginCommunication & RegistrationCommunication & AuthMeCommunication & GoogleAuthCommunication
-    & CategoriesCommunication & ReportIssueCommunication & GetAllReportsCommunication
+& CategoriesCommunication & ReportIssueCommunication & GetAllReportsCommunication & PushTokenCommunication
 
 class AppCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()
@@ -35,6 +35,10 @@ class AppCoordinator: Coordinator, ObservableObject {
             guard let self = self else { return }
 
             self.startMainAppFlow()
+        }
+
+        if let pushToken = keychain.pushToken {
+            postPushToken(token: pushToken)
         }
     }
 
@@ -70,5 +74,14 @@ class AppCoordinator: Coordinator, ObservableObject {
 
     private func removeDataAfterLogout() {
         userRepository.logout()
+    }
+
+    private func postPushToken(token: String) {
+        Task { @MainActor in
+            do {
+                let _ = try await communicationManager.postPushToken(token: token)
+                print("success")
+            } catch { }
+        }
     }
 }

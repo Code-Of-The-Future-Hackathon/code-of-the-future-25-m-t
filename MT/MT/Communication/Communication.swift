@@ -34,3 +34,7 @@ protocol ReportIssueCommunication {
 protocol GetAllReportsCommunication {
     func getAllReports(report: ReportGetBody) async throws -> [ReportResponse]
 }
+
+protocol PushTokenCommunication {
+    func postPushToken(token: String) async throws -> EmptyResponse
+}

@@ -24,7 +24,7 @@ struct SignInView: View {
                 }
                 emailField
                 passwordField
-                resetPasswordText
+//                resetPasswordText
                 continueButton
 
                 TypographyText(text: "Or log in with:", typography: .body2)

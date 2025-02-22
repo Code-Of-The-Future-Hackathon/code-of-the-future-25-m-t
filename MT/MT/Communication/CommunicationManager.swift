@@ -299,6 +299,18 @@ extension CommunicationManager: ReportIssueCommunication {
     }
 }
 
+extension CommunicationManager: PushTokenCommunication {
+    func postPushToken(token: String) async throws -> EmptyResponse {
+        let endpoint = Constants.RequestEndpoint.pushToken
+        let parameters: Parameters = ["pushToken": token]
+
+        return try await execute(Request(endpoint,
+                                         headers: defaultHeaders,
+                                         encoding: JSONEncoding.default,
+                                         parameters: parameters))
+    }
+}
+
 extension CommunicationManager: GetAllReportsCommunication {
     func getAllReports(report: ReportGetBody) async throws -> [ReportResponse] {
         let endpoint = Constants.RequestEndpoint.getIssues

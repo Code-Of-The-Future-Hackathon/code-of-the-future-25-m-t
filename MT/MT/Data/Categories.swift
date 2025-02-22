@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Category: Codable, Identifiable {
+struct Category: Codable, Identifiable, Hashable {
     let id: Int
     let title: String
     let icon: String
@@ -15,7 +15,7 @@ struct Category: Codable, Identifiable {
     let supportsImages: Bool
 }
 
-struct IssueType: Codable, Identifiable {
+struct IssueType: Codable, Identifiable, Hashable {
     let id: Int
     let title: String
 }
