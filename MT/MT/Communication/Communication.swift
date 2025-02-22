@@ -39,6 +39,10 @@ protocol PushTokenCommunication {
     func postPushToken(token: String) async throws -> EmptyResponse
 }
 
+protocol UpdateIssueStatusCommunication {
+    func updateIssueStatus(reportId: Int, status: ReportStatus) async throws -> EmptyResponse
+}
+
 protocol ContinueAsGuestCommunication {
     func continueAsGuest() async throws -> Tokens
 }

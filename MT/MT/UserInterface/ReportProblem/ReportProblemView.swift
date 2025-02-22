@@ -46,17 +46,19 @@ struct ReportProblemView: View {
 
             Spacer()
 
-            Button(action: {
-                viewModel.isShowingCamera = true
-            }) {
-                HStack {
-                    Image(systemName: "camera.fill")
-                    Text(viewModel.image == nil ? "Upload Image" : "Retake Image")
+            if viewModel.supportsImages {
+                Button(action: {
+                    viewModel.isShowingCamera = true
+                }) {
+                    HStack {
+                        Image(systemName: "camera.fill")
+                        Text(viewModel.image == nil ? "Upload Image" : "Retake Image")
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue.opacity(0.2))
+                    .cornerRadius(10)
                 }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.blue.opacity(0.2))
-                .cornerRadius(10)
             }
 
             Button(action: {
@@ -81,6 +83,6 @@ struct ReportProblemView: View {
     }
 }
 
-//#Preview {
+// #Preview {
 //    ReportProblemView(viewModel: ReportProblemViewModel(communication: <#any ReportIssueCommunication#>, issueType: IssueType(id: 1, title: "Test"), goBack: {}))
-//}
+// }

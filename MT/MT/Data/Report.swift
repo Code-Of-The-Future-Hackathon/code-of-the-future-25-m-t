@@ -7,6 +7,12 @@
 
 import UIKit
 
+enum ReportStatus: String, Codable {
+    case active = "ACTIVE"
+    case resolved = "RESOLVED"
+    case expired = "EXPIRED"
+}
+
 struct ReportResponse: Codable, Identifiable {
     let address: String?
     let description: String?
@@ -18,7 +24,7 @@ struct ReportResponse: Codable, Identifiable {
     let createdAt: String
     let distance: Double?
     let issues: [Issue]?
-    let status: String?
+    let status: ReportStatus?
 
     struct ReportType: Codable {
         let id: Int
