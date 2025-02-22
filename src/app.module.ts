@@ -13,6 +13,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { IssuesModule } from './issues/issues.module';
 import { SensorsModule } from './sensors/sensors.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SensorsModule } from './sensors/sensors.module';
     FilesModule,
     IssuesModule,
     SensorsModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [

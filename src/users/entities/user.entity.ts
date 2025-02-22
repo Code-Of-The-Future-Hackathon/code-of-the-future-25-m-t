@@ -49,6 +49,11 @@ export class UserEntity {
   googleId: string;
 
   @Column({
+    nullable: true,
+  })
+  pushToken: string;
+
+  @Column({
     enum: UserRoles,
     default: UserRoles.User,
   })
