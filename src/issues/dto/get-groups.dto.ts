@@ -33,21 +33,5 @@ export class GetGroupsDto {
   })
   @IsOptional()
   @IsBoolean()
-  self?: boolean;
-
-  @ApiProperty({
-    required: false,
-    default: false,
-  })
-  @IsOptional()
-  @IsBoolean()
-  resolvedByMe?: boolean;
-
-  @ApiProperty({
-    required: false,
-    default: false,
-  })
-  @IsOptional()
-  @IsBoolean()
   sort?: boolean;
 }

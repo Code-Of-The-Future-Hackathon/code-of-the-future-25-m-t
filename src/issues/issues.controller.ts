@@ -40,8 +40,20 @@ export class IssuesController {
   }
 
   @Get()
-  async findAll(@Query() query: GetGroupsDto, @Request() req: RequestWithUser) {
-    return await this.issuesService.findGroupsWithDetails(query, req.user);
+  async findAll(@Query() query: GetGroupsDto) {
+    return await this.issuesService.findGroupsWithDetails(query);
+  }
+
+  @Get('active/self')
+  async findSelf(@Request() req: RequestWithUser) {
+    return await this.issuesService.findUserGroups(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Role(UserRoles.Admin)
+  @Get('resolved/admin')
+  async findAdmin(@Request() req: RequestWithUser) {
+    return await this.issuesService.findUserResolvedIssues(req.user);
   }
 
   @Get(':id')
@@ -50,7 +62,7 @@ export class IssuesController {
   }
 
   @ApiBearerAuth('AccessToken')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Role(UserRoles.Admin)
   @Patch('/status/:id')
   async changeStatus(

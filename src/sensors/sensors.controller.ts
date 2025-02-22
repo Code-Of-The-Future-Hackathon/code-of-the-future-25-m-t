@@ -16,9 +16,9 @@ import { UserRoles } from 'src/common';
 import { SensorsService } from './sensors.service';
 import { CreateSensorDto, UpdateSensorDto } from './dto';
 import { SensorGuard } from 'src/auth/guards/sensor.guard';
-import { Sensor } from 'src/auth/decorators/sensor.decorator';
 import { CreateIssueDto } from 'src/issues/dto';
 import { SensorEntity } from './entities';
+import { Sensor } from 'src/auth/decorators/sensor.decorator';
 
 @ApiTags('Sensors')
 @ApiBearerAuth('AccessToken')

@@ -165,14 +165,13 @@ export class IssuesService {
     return await this.issueGroupsRepository.save(group);
   }
 
-  async findAllGroups(data: GetGroupsDto, user?: UserEntity) {
+  async findAllGroups(data: GetGroupsDto) {
     const { topLeft, bottomRight } = this.boundingBox(
       data.lat,
       data.lon,
       Math.min(data.radius, this.MAX_RADIUS_METERS),
     );
 
-    let status = GroupStatusEnum.Active;
     const query = this.issueGroupsRepository
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.type', 'type')
@@ -180,6 +179,7 @@ export class IssuesService {
       .leftJoinAndSelect('issue.file', 'file')
       .leftJoinAndSelect('type.category', 'category')
       .where('group.lat <= :topLat', { topLat: topLeft.lat })
+      .andWhere('group.status = :status', { status: GroupStatusEnum.Active })
       .andWhere('group.lat >= :bottomLat', { bottomLat: bottomRight.lat })
       .andWhere('group.lon >= :topLon', { topLon: topLeft.lon })
       .andWhere('group.lon <= :bottomLon', { bottomLon: bottomRight.lon });
@@ -189,24 +189,41 @@ export class IssuesService {
         categoryId: data.categoryId,
       });
     }
-    if (data.resolvedByMe && user?.role === UserRoles.Admin) {
-      query.andWhere('group.resolverId = :resolverId', {
-        resolverId: user.id,
-      });
-      status = GroupStatusEnum.Resolved;
-    }
-    if (data.self && user) {
-      query.andWhere('group.userId = :userId', {
-        userId: user.id,
-      });
-    }
-    query.andWhere('group.status = :status', { status });
 
     return await query.getMany();
   }
 
-  async findGroupsWithDetails(data: GetGroupsDto, user: UserEntity) {
-    const groups = await this.findAllGroups(data, user);
+  async findUserGroups(user: UserEntity) {
+    return await this.issueGroupsRepository
+      .createQueryBuilder('group')
+      .leftJoinAndSelect('group.type', 'type')
+      .leftJoinAndSelect('group.issues', 'issue')
+      .leftJoinAndSelect('issue.file', 'file')
+      .leftJoinAndSelect('type.category', 'category')
+      .where('group.userId = :userId', {
+        userId: user.id,
+      })
+      .orderBy('group.id', 'DESC')
+      .getMany();
+  }
+
+  async findUserResolvedIssues(user: UserEntity) {
+    return await this.issueGroupsRepository
+      .createQueryBuilder('group')
+      .leftJoinAndSelect('group.type', 'type')
+      .leftJoinAndSelect('group.issues', 'issue')
+      .leftJoinAndSelect('issue.file', 'file')
+      .leftJoinAndSelect('type.category', 'category')
+      .where('group.resolverId = :userId', {
+        userId: user.id,
+      })
+      .andWhere('group.status = :status', { status: GroupStatusEnum.Resolved })
+      .orderBy('group.id', 'DESC')
+      .getMany();
+  }
+
+  async findGroupsWithDetails(data: GetGroupsDto) {
+    const groups = await this.findAllGroups(data);
 
     const mappedGroups = groups.map((group) => {
       return {
