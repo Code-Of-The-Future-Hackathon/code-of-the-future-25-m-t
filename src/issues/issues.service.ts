@@ -14,7 +14,6 @@ import { ChangeStatusDto, CreateIssueDto } from './dto';
 import { GetGroupsDto } from './dto/get-groups.dto';
 import { GroupStatusEnum, ReporterEnum } from './enums';
 import { IssueErrorCodes } from './errors';
-import { UserRoles } from 'src/common';
 
 @Injectable()
 export class IssuesService {
@@ -267,8 +266,8 @@ export class IssuesService {
     return group;
   }
 
-  async changeStatus(user: UserEntity, id: number, dto: ChangeStatusDto) {
-    const group = await this.findOneGroupOrFail(id);
+  async changeStatus(user: UserEntity, dto: ChangeStatusDto) {
+    const group = await this.findOneGroupOrFail(dto.id);
 
     if (group.status === dto.status) {
       return group;

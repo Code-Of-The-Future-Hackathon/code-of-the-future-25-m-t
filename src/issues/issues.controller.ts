@@ -17,10 +17,10 @@ import { JwtAuthGuard, RolesGuard } from 'src/auth/guards';
 import { RequestWithUser, UserRoles } from 'src/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Role } from 'src/auth/decorators';
+import { UserEntity } from 'src/users/entities';
 
 import { IssuesService } from './issues.service';
 import { ChangeStatusDto, CreateIssueDto, GetGroupsDto } from './dto';
-import { UserEntity } from 'src/users/entities';
 
 @ApiTags('Issues')
 @Controller('issues')
@@ -65,12 +65,11 @@ export class IssuesController {
   @ApiBearerAuth('AccessToken')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Role(UserRoles.Admin)
-  @Patch('/status/:id')
+  @Patch('/status')
   async changeStatus(
-    @Param('id') id: string,
     @Query() dto: ChangeStatusDto,
     @Req() req: { user: UserEntity },
   ) {
-    return await this.issuesService.changeStatus(req.user, +id, dto);
+    return await this.issuesService.changeStatus(req.user, dto);
   }
 }
