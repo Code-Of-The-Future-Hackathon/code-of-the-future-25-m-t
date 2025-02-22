@@ -90,6 +90,7 @@ export class IssuesService {
     const groups = await this.findAllGroups({lat: issue.lat, lon: issue.lon, radius: 10});
     if (groups.length) {
       groups.forEach((group) => {
+        if (!group.address) group.address = issue.address;
         if (!group.issues) group.issues = [];
         group.issues.push({ id: issue.id } as IssueEntity);
       });

@@ -4,8 +4,8 @@ export class AddressInfo1740220557887 implements MigrationInterface {
     name = 'AddressInfo1740220557887'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "issue_group" ADD "address" character varying NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "issue" ADD "address" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "issue_group" ADD "address" character varying`);
+        await queryRunner.query(`ALTER TABLE "issue" ADD "address" character varying`);
         await queryRunner.query(`ALTER TABLE "issue" ALTER COLUMN "description" DROP NOT NULL`);
     }
 
