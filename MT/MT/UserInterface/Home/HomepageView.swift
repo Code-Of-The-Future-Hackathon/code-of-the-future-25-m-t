@@ -5,8 +5,8 @@
 //  Created by Ivan Gamov on 21.02.25.
 //
 
-import SwiftUI
 import MapKit
+import SwiftUI
 
 struct HomepageView: View {
     @StateObject var viewModel: HomepageViewModel
@@ -24,6 +24,20 @@ struct HomepageView: View {
                     Text("Visible Height: \(String(format: "%.2f", viewModel.visibleHeightKm)) km")
                     Text("Top-Left: \(viewModel.topLeftCoordinate.latitude), \(viewModel.topLeftCoordinate.longitude)")
                     Text("Bottom-Right: \(viewModel.bottomRightCoordinate.latitude), \(viewModel.bottomRightCoordinate.longitude)")
+                    Button(action: {
+                        showCategoriesSheet.toggle()
+                    }) {
+                        HStack {
+                            Image(systemName: "list.bullet")
+                            Text("Show Categories")
+                                .font(.headline)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                    }
                 }
                 .padding()
                 .background(Color.white.opacity(0.8))
@@ -47,35 +61,10 @@ struct HomepageView: View {
                     viewModel.updateVisibleArea(region: region)
                 }
             }
-            
-            VStack {
-                Text("Homepage")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding()
-
-                Button(action: {
-                    showCategoriesSheet.toggle()
-                }) {
-                    HStack {
-                        Image(systemName: "list.bullet")
-                        Text("Show Categories")
-                            .font(.headline)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                }
-                .padding()
-
-                Spacer()
-            }
-            
         }
         .sheet(isPresented: $showCategoriesSheet) {
             CategoriesView(viewModel: CategoriesViewModel(communication: viewModel.communication))
+        }
     }
 }
 
