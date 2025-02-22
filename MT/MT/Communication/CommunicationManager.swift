@@ -5,8 +5,8 @@
 //  Created by Mihail Kolev on 21/02/2025.
 //
 
-import Alamofire
 import Foundation
+import Alamofire
 
 class CommunicationManager {
     private class var label: String {
@@ -252,50 +252,28 @@ extension CommunicationManager: ReportIssueCommunication {
         let endpoint = Constants.RequestEndpoint.reportAnIssue
         let headers: HTTPHeaders = defaultHeaders
 
-        let response = await sessionManager.upload(
-            multipartFormData: { multipartFormData in
-                if let latData = "\(report.lat)".data(using: .utf8) {
-                    multipartFormData.append(latData, withName: "lat")
-                }
-                if let lonData = "\(report.lon)".data(using: .utf8) {
-                    multipartFormData.append(lonData, withName: "lon")
-                }
-                if let typeIdData = "\(report.typeId)".data(using: .utf8) {
-                    multipartFormData.append(typeIdData, withName: "typeId")
-                }
-                if let description = report.description,
-                   let descriptionData = description.data(using: .utf8) {
-                    multipartFormData.append(descriptionData, withName: "description")
-                }
-                if let address = report.address,
-                   let addressData = address.data(using: .utf8) {
-                    multipartFormData.append(addressData, withName: "address")
-                }
+        var parameters: Parameters = [
+            "lat": report.lat,
+            "lon": report.lon,
+            "typeId": report.typeId
+        ]
 
-                if let file = report.file,
-                   let imageData = file.jpegData(compressionQuality: 0.5) {
-                    multipartFormData.append(imageData,
-                                             withName: "file",
-                                             fileName: "report.jpg",
-                                             mimeType: "image/jpeg")
-                }
-            },
-            to: endpoint.url,
-            method: .post,
-            headers: headers
+        if let description = report.description {
+            parameters["description"] = description
+        }
+
+        if let address = report.address {
+            parameters["address"] = address
+        }
+
+        return try await execute(
+            Request(
+                endpoint,
+                headers: headers,
+                encoding: JSONEncoding.default,
+                parameters: parameters
+            )
         )
-        .redirect(using: .follow)
-        .validate()
-        .cURLDescription { description in
-            print("description: \(description)")
-        }
-        .serializingDecodable(ReportResponse.self)
-        .response
-
-        if let error = response.error {
-            throw error
-        }
-        return try response.result.get()
     }
 }
 
@@ -319,7 +297,7 @@ extension CommunicationManager: GetAllReportsCommunication {
         var parameters: Parameters = [
             "lat": report.lat,
             "lon": report.lon,
-            "radius": report.radius,
+            "radius": report.radius
         ]
 
         if let categoryId = report.categoryId {

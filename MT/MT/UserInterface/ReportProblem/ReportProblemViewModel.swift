@@ -50,8 +50,7 @@ class ReportProblemViewModel: ObservableObject {
                     address: address,
                     lat: lattitude,
                     lon: longitude,
-                    typeId: issueType.id,
-                    file: image))
+                    typeId: issueType.id))
             } catch {
                 didFailReportingProblem = true
                 requestErrorMessage = error.customErrorMessage("Could not report a problem.")

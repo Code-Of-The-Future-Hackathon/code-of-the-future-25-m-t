@@ -12,7 +12,7 @@ struct Category: Codable, Identifiable, Hashable {
     let title: String
     let icon: String
     let types: [IssueType]?
-    let supportsImages: Bool
+    let supportsImages: Bool?
 }
 
 struct IssueType: Codable, Identifiable, Hashable {

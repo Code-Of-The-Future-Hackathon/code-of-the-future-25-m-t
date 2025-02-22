@@ -51,9 +51,6 @@ struct HomepageView: View {
 
                 MapView(
                     pointers: viewModel.pointers,
-                    onMarkerTap: { report in
-                        viewModel.openReportDetail?(report)
-                    },
                     region: $region,
                     visibleWidthKm: $viewModel.visibleWidthKm,
                     visibleHeightKm: $viewModel.visibleHeightKm,
