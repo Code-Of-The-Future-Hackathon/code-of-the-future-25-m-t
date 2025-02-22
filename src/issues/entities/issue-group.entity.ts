@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { TypeEntity } from 'src/categories/entities';
 
-import { GroupStatusEnum } from '../enums';
+import { GroupStatusEnum, ReporterEnum } from '../enums';
 
 import { IssueEntity } from './issue.entity';
 
@@ -30,6 +30,13 @@ export class IssueGroupEntity {
     type: 'real',
   })
   lon: number;
+
+  @Column({
+    type: 'enum',
+    enum: ReporterEnum,
+    default: ReporterEnum.User,
+  })
+  reporter: ReporterEnum;
 
   @Column({
     type: 'enum',

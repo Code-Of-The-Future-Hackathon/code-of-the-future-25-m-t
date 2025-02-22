@@ -14,6 +14,7 @@ import {
 } from 'typeorm';
 
 import { IssueGroupEntity } from './issue-group.entity';
+import { SensorEntity } from 'src/sensors/entities';
 
 @Entity('issue')
 export class IssueEntity {
@@ -46,8 +47,17 @@ export class IssueEntity {
   @ManyToOne(() => TypeEntity, (type) => type.issues)
   type: TypeEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.issues)
-  user: UserEntity;
+  @ManyToOne(() => UserEntity, (user) => user.issues, {
+    nullable: true,
+    cascade: true,
+  })
+  user?: UserEntity;
+
+  @ManyToOne(() => SensorEntity, (sensor) => sensor.issues, {
+    nullable: true,
+    cascade: true,
+  })
+  sensor?: SensorEntity;
 
   @ManyToMany(() => IssueGroupEntity, (issueGroup) => issueGroup.issues)
   @JoinTable()

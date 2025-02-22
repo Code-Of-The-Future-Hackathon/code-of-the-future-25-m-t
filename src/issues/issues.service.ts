@@ -9,8 +9,9 @@ import { UsersService } from 'src/users/users.service';
 import { IssueEntity, IssueGroupEntity } from './entities';
 import { ChangeStatusDto, CreateIssueDto } from './dto';
 import { GetGroupsDto } from './dto/get-groups.dto';
-import { GroupStatusEnum } from './enums';
+import { GroupStatusEnum, ReporterEnum } from './enums';
 import { IssueErrorCodes } from './errors';
+import { SensorEntity } from 'src/sensors/entities';
 
 @Injectable()
 export class IssuesService {
@@ -90,7 +91,26 @@ export class IssuesService {
     return issueEntity;
   }
 
+  async createBySensor(sensor: SensorEntity, dto: CreateIssueDto) {
+    const type = await this.categoriesService.findOneTypeOrFail(dto.typeId);
+    const issue = this.issueRepository.create({
+      ...dto,
+      type: {
+        id: type.id,
+      },
+      sensor: {
+        id: sensor.id,
+      },
+    });
+
+    const issueEntity = await this.issueRepository.save(issue);
+    await this.addToGroupsOrCreate(issueEntity);
+
+    return issueEntity;
+  }
+
   async addToGroupsOrCreate(issue: IssueEntity) {
+    const reporter = issue.user ? ReporterEnum.User : ReporterEnum.Sensor;
     const groups = await this.findAllGroups({
       lat: issue.lat,
       lon: issue.lon,
@@ -98,6 +118,7 @@ export class IssuesService {
     });
     if (groups.length) {
       groups.forEach((group) => {
+        if (group.reporter !== reporter) group.reporter = ReporterEnum.All;
         if (!group.address) group.address = issue.address;
         if (!group.issues) group.issues = [];
         group.issues.push({ id: issue.id } as IssueEntity);
@@ -110,6 +131,7 @@ export class IssuesService {
       address: issue.address,
       lat: issue.lat,
       lon: issue.lon,
+      reporter,
       type: {
         id: issue.type.id,
       },
@@ -176,7 +198,13 @@ export class IssuesService {
   async findOneGroup(id: number) {
     return await this.issueGroupsRepository.findOne({
       where: { id },
-      relations: ['type', 'issues', 'issues.user', 'issues.file'],
+      relations: [
+        'type',
+        'issues',
+        'issues.user',
+        'issues.sensor',
+        'issues.file',
+      ],
     });
   }
 
@@ -199,7 +227,9 @@ export class IssuesService {
 
     if (dto.status === GroupStatusEnum.Resolved) {
       group.issues.forEach((issue) => {
-        void this.usersService.incrUserPoints(issue.user, 10);
+        if (issue.user) {
+          void this.usersService.incrUserPoints(issue.user, 10);
+        }
       });
     }
     group.status = dto.status;

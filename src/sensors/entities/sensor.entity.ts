@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IssueEntity } from 'src/issues/entities';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('sensor')
 export class SensorEntity {
@@ -18,4 +19,7 @@ export class SensorEntity {
   @Column()
   @Exclude()
   secret: string;
+
+  @OneToMany(() => IssueEntity, (issue) => issue.user)
+  issues: IssueEntity[];
 }
