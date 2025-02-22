@@ -8,9 +8,9 @@ export class CreateIssueDto {
   description?: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  address: string;
+  address?: string;
 
   @ApiProperty()
   @IsNotEmpty()
