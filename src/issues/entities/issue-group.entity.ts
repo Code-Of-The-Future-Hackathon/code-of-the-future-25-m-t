@@ -9,6 +9,8 @@ import {
 } from 'typeorm';
 import { TypeEntity } from 'src/categories/entities';
 
+import { GroupStatusEnum } from '../enums';
+
 import { IssueEntity } from './issue.entity';
 
 @Entity('issue_group')
@@ -28,6 +30,13 @@ export class IssueGroupEntity {
     type: 'real',
   })
   lon: number;
+
+  @Column({
+    type: 'enum',
+    enum: GroupStatusEnum,
+    default: GroupStatusEnum.Active,
+  })
+  status: GroupStatusEnum;
 
   @ManyToOne(() => TypeEntity, (type) => type.groups)
   type: TypeEntity;
