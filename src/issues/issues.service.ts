@@ -91,10 +91,7 @@ export class IssuesService {
     return issueEntity;
   }
 
-  async createBySensor(
-    sensor: SensorEntity,
-    dto: CreateIssueDto,
-  ) {
+  async createBySensor(sensor: SensorEntity, dto: CreateIssueDto) {
     const type = await this.categoriesService.findOneTypeOrFail(dto.typeId);
     const issue = this.issueRepository.create({
       ...dto,
@@ -159,6 +156,7 @@ export class IssuesService {
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.type', 'type')
       .leftJoinAndSelect('group.issues', 'issue')
+      .leftJoinAndSelect('issue.file', 'file')
       .leftJoinAndSelect('type.category', 'category')
       .where('group.lat <= :topLat', { topLat: topLeft.lat })
       .andWhere('group.status = :status', { status: GroupStatusEnum.Active })
@@ -200,7 +198,13 @@ export class IssuesService {
   async findOneGroup(id: number) {
     return await this.issueGroupsRepository.findOne({
       where: { id },
-      relations: ['type', 'issues', 'issues.user', 'issues.sensor'],
+      relations: [
+        'type',
+        'issues',
+        'issues.user',
+        'issues.sensor',
+        'issues.file',
+      ],
     });
   }
 
