@@ -377,8 +377,8 @@ extension CommunicationManager: GetAllActiveReportsCommunication {
         let headers: HTTPHeaders = defaultHeaders
 
         return try await execute(Request(
-                endpoint,
-                headers: headers))
+            endpoint,
+            headers: headers))
     }
 }
 
@@ -388,7 +388,18 @@ extension CommunicationManager: GetAllResolvedReportsCommunication {
         let headers: HTTPHeaders = defaultHeaders
 
         return try await execute(Request(
-                endpoint,
-                headers: headers))
+            endpoint,
+            headers: headers))
+    }
+}
+
+extension CommunicationManager: GetTitleMappingsCommunication {
+    func getTitleMappings() async throws -> [TitleMapping] {
+        let endpoint = Constants.RequestEndpoint.getTitleMappings
+        let headers: HTTPHeaders = defaultHeaders
+
+        return try await execute(Request(
+            endpoint,
+            headers: headers))
     }
 }

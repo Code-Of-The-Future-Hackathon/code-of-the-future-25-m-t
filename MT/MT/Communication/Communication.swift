@@ -54,3 +54,7 @@ protocol GetAllActiveReportsCommunication {
 protocol GetAllResolvedReportsCommunication {
     func getResolvedIssues() async throws -> [ReportResponse]
 }
+
+protocol GetTitleMappingsCommunication {
+    func getTitleMappings() async throws -> [TitleMapping]
+}

@@ -13,6 +13,7 @@ class ProfileViewModel: ObservableObject {
     @Published var reportsActive: [ReportResponse] = []
     @Published var reportsResolved: [ReportResponse] = []
     var logoutClicked: Event?
+    var navigateToAchievements: Event?
     var myUser: User
 
     let communication: ProfileCoordinatorCommunication
