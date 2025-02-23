@@ -63,12 +63,12 @@ struct ProfileView: View {
                                 reportsStatusType = .active
                             } label: {
                                 ZStack {
-                                    reportsStatusType == .active ? Color.gray : Color.white
+                                    reportsStatusType == .active ? Color.blue : Color.white
                                     HStack {
                                         Spacer()
                                         TypographyText(text: "My reports" , typography: .body)
                                             .foregroundStyle(.black.opacity(0.8))
-                                            .foregroundStyle(reportsStatusType == .active ? .white : .black)
+                                            .foregroundStyle(reportsStatusType == .active ? .white : .blue)
                                         Spacer()
                                     }
                                 }
@@ -78,12 +78,12 @@ struct ProfileView: View {
                                 reportsStatusType = .resolved
                             } label: {
                                 ZStack {
-                                    reportsStatusType == .resolved ? Color.gray : Color.white
+                                    reportsStatusType == .resolved ? Color.blue : Color.white
                                     HStack {
                                         Spacer()
                                         TypographyText(text: "Resolved by me" , typography: .body)
                                             .foregroundStyle(.black.opacity(0.8))
-                                            .foregroundStyle(reportsStatusType == .active ? .white : .black)
+                                            .foregroundStyle(reportsStatusType == .active ? .white : .blue)
                                         Spacer()
                                     }
                                 }
@@ -94,7 +94,7 @@ struct ProfileView: View {
                         .frame(height: 40)
 
                         RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color(.black), lineWidth: 1)
+                            .stroke(Color(.black.opacity(0.5)), lineWidth: 1)
                             .padding(.horizontal, 28)
                             .frame(height: 40)
 

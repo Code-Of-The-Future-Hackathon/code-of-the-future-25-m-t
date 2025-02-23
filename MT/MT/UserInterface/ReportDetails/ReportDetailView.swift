@@ -14,20 +14,12 @@ struct ReportDetailView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            ZStack(alignment: .top) {
-                HStack {
-                    Button(action: viewModel.goBack) {
-                        Image(systemName: "arrow.backward")
-                    }
-                    .padding()
-
-                    Spacer()
-                }
-
-                TypographyText(text: "Report Details", typography: .bigHeading)
+            VStack(spacing: 12) {
+                title
+                
+                Divider()
+                    .padding(.horizontal, -16)
             }
-
-            Divider()
 
             Group {
                 if let icon = viewModel.report.type.category?.icon, let title = viewModel.report.type.category?.title {
@@ -69,7 +61,7 @@ struct ReportDetailView: View {
 
                             VStack(alignment: .leading, spacing: 8) {
                                 if let issueDescription = issue.description {
-                                    TypographyText(text: "Issue Description: \(issueDescription)", typography: .body)
+                                    TypographyText(text: issueDescription, typography: .body)
                                 }
                             }
                             .padding(.horizontal)
@@ -97,7 +89,30 @@ struct ReportDetailView: View {
                 CustomButton(action: viewModel.updateStatus, text: "Resolve")
             }
         }
-        .padding()
+        .padding(.horizontal)
         .navigationBarHidden(true)
+    }
+
+    var heading: some View {
+        HStack {
+            Button(action: viewModel.goBack) {
+                Image(systemName: "arrow.backward")
+            }
+            
+            Spacer()
+        }
+//        .padding()
+    }
+
+    var title: some View {
+        ZStack {
+            heading
+
+            HStack(spacing: 0) {
+                TypographyText(text: "Report Details", typography: .largeHeading)
+                    .foregroundStyle(.black.opacity(0.8))
+            }
+            .padding(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
+        }
     }
 }
