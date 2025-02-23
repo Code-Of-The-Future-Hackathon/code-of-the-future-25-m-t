@@ -100,13 +100,17 @@ struct ReportGetBody: Codable {
     let lat: Double
     let lon: Double
     let radius: Double
+    let selff: Bool?
+    let resolvedByMe: Bool?
 
-    init(sort: Bool? = false, categoryId: Int? = nil, lat: Double, lon: Double, radius: Double) {
+    init(sort: Bool? = false, categoryId: Int? = nil, lat: Double, lon: Double, radius: Double, selff: Bool? = false, resolvedByMe: Bool? = false) {
         self.sort = sort
         self.categoryId = categoryId
         self.lat = lat
         self.lon = lon
         self.radius = radius
+        self.selff = selff
+        self.resolvedByMe = resolvedByMe
     }
 }
 

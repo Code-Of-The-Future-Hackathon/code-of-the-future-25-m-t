@@ -25,7 +25,7 @@ class TabBarCoordinator: Coordinator, ObservableObject {
         return coordinator
     }()
     private lazy var profileCoordinator: ProfileCoordinator = {
-        let coordinator = ProfileCoordinator()
+        let coordinator = ProfileCoordinator(user: user, communication: communicationManager)
         coordinator.logout = { [weak self] in
             self?.logout?()
         }

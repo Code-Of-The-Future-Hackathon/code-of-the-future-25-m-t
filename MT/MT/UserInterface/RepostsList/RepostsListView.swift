@@ -12,7 +12,7 @@ struct RepostsListView: View {
 
     var body: some View {
         ZStack {
-            Color.yellow.opacity(0.1)
+            Color(.systemBackground).opacity(0.95)
                 .ignoresSafeArea()
             VStack(spacing: 12) {
                 searchBox
@@ -109,17 +109,21 @@ struct RepostsListView: View {
                         TypographyText(text: report.distanceInKm, typography: .body2)
                             .foregroundStyle(.black.opacity(0.8))
                     }
-                    .listRowBackground(Color.clear) // Ensure each row is clear
+                    .contentShape(Rectangle())
+                    .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
                     .listRowSeparator(.hidden)
+                    .onTapGesture {
+                        viewModel.openReportDetail(report)
+                    }
                 }
             }
             .refreshable {
                 viewModel.getAllReports()
             }
             .listStyle(.plain)
-            .scrollContentBackground(.hidden) // Remove default background
-            .background(Color.clear) // Ensure List background is clear
+            .scrollContentBackground(.hidden)
+            .background(Color.clear)
             .padding(.horizontal)
         }
     }
