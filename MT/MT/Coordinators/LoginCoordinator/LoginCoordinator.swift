@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 typealias SignCommunication = LoginCommunication & RegistrationCommunication & AuthMeCommunication & GoogleAuthCommunication
-& ContinueAsGuestCommunication
+    & ContinueAsGuestCommunication & AppleAuthCommunication
 
 class LoginCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()

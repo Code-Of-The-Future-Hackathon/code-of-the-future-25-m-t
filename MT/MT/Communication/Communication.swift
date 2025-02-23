@@ -54,3 +54,7 @@ protocol GetAllActiveReportsCommunication {
 protocol GetAllResolvedReportsCommunication {
     func getResolvedIssues() async throws -> [ReportResponse]
 }
+
+protocol AppleAuthCommunication {
+    func appleAuth(token: String) async throws -> Tokens
+}

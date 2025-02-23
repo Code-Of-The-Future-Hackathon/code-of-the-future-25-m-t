@@ -392,3 +392,15 @@ extension CommunicationManager: GetAllResolvedReportsCommunication {
                 headers: headers))
     }
 }
+
+extension CommunicationManager: AppleAuthCommunication {
+    func appleAuth(token: String) async throws -> Tokens {
+        let endpoint = Constants.RequestEndpoint.appleAuth
+        let parameters: Parameters = ["token": token]
+
+        return try await execute(Request(endpoint,
+                                         headers: defaultHeaders,
+                                         encoding: JSONEncoding.default,
+                                         parameters: parameters))
+    }
+}

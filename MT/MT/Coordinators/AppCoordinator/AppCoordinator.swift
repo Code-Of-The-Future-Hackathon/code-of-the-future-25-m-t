@@ -13,6 +13,7 @@ typealias Event = () -> Void
 typealias Communication = LoginCommunication & RegistrationCommunication & AuthMeCommunication & GoogleAuthCommunication
     & CategoriesCommunication & ReportIssueCommunication & GetAllReportsCommunication & PushTokenCommunication
     & UpdateIssueStatusCommunication & ContinueAsGuestCommunication & GetAllActiveReportsCommunication & GetAllResolvedReportsCommunication
+    & AppleAuthCommunication
 
 class AppCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()

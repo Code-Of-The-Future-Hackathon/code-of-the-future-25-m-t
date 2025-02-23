@@ -8,6 +8,7 @@
 import Foundation
 
 typealias SignUpCommunication = RegistrationCommunication & AuthMeCommunication & GoogleAuthCommunication & ContinueAsGuestCommunication
+    & AppleAuthCommunication
 
 class SignUpViewModel: ObservableObject {
     @Published var email = ""
@@ -64,6 +65,21 @@ class SignUpViewModel: ObservableObject {
             } catch {
                 didFailRegister = true
                 requestErrorMessage = error.customErrorMessage("Could not register this user")
+            }
+        }
+    }
+
+    func appleLogin(token: String) {
+        Task { @MainActor in
+            do {
+                let loginResponse = try await communication.appleAuth(token: token)
+                userRepository.authToken = loginResponse
+                let profileResponse = try await communication.getMyProfile()
+                userRepository.user = profileResponse
+                registerSuccessful?()
+            } catch {
+                didFailRegister = true
+                requestErrorMessage = error.customErrorMessage("Could not login this user")
             }
         }
     }

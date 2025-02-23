@@ -24,6 +24,7 @@ extension Constants {
         case registration
         case getMyProfile
         case googleAuth
+        case appleAuth
         case refreshToken
         case pushToken
         case getCategories
@@ -49,6 +50,8 @@ extension Constants.RequestEndpoint: URLConvertible {
             return Self.serverURL + "/users/me"
         case .googleAuth:
             return Self.serverURL + "/auth/google-token-login"
+        case .appleAuth:
+            return Self.serverURL + "/auth/apple-login"
         case .pushToken:
             return Self.serverURL + "/users/push-token"
         case .refreshToken:
@@ -72,7 +75,7 @@ extension Constants.RequestEndpoint: URLConvertible {
 extension Constants.RequestEndpoint: HTTPMethodConvertible {
     var method: HTTPMethod {
         switch self {
-        case .login, .registration, .googleAuth, .refreshToken, .reportAnIssue, .continueAsGuest:
+        case .login, .registration, .googleAuth, .refreshToken, .reportAnIssue, .continueAsGuest, .appleAuth:
             return .post
         case .getMyProfile, .getCategories, .getIssues, .getIssuesActive, .getIssuesResolved:
             return .get
