@@ -330,6 +330,14 @@ extension CommunicationManager: GetAllReportsCommunication {
             parameters["sort"] = sort
         }
 
+        if let selff = report.selff {
+            parameters["self"] = selff
+        }
+
+        if let resolvedByMe = report.resolvedByMe {
+            parameters["resolvedByMe"] = resolvedByMe
+        }
+
         return try await execute(
             Request(
                 endpoint,
@@ -360,5 +368,27 @@ extension CommunicationManager: ContinueAsGuestCommunication {
 
         return try await execute(Request(endpoint,
                                          headers: defaultHeaders))
+    }
+}
+
+extension CommunicationManager: GetAllActiveReportsCommunication {
+    func getActiveIssues() async throws -> [ReportResponse] {
+        let endpoint = Constants.RequestEndpoint.getIssuesActive
+        let headers: HTTPHeaders = defaultHeaders
+
+        return try await execute(Request(
+                endpoint,
+                headers: headers))
+    }
+}
+
+extension CommunicationManager: GetAllResolvedReportsCommunication {
+    func getResolvedIssues() async throws -> [ReportResponse] {
+        let endpoint = Constants.RequestEndpoint.getIssuesResolved
+        let headers: HTTPHeaders = defaultHeaders
+
+        return try await execute(Request(
+                endpoint,
+                headers: headers))
     }
 }

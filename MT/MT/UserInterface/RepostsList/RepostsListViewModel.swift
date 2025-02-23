@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-typealias ReportsListCommunication = CategoriesCommunication & HomeCommunication
+typealias ReportsListCommunication = CategoriesCommunication & GetAllReportsCommunication
 
 class RepostsListViewModel: ObservableObject {
     let communication: ReportsListCommunication
@@ -24,12 +24,14 @@ class RepostsListViewModel: ObservableObject {
     @Published var selectedCategory: Int?
 
     let goBack: Event
+    var openReportDetail: ReportResponseEvent
 
-    init(communication: ReportsListCommunication, visibleHeightKm: Double, currentRegion: MKCoordinateRegion, goBack: @escaping Event) {
+    init(communication: ReportsListCommunication, visibleHeightKm: Double, currentRegion: MKCoordinateRegion, goBack: @escaping Event, openReportDetail: @escaping ReportResponseEvent) {
         self.communication = communication
         self.visibleHeightKm = visibleHeightKm
         self.currentRegion = currentRegion
         self.goBack = goBack
+        self.openReportDetail = openReportDetail
 
         loadCategories()
     }

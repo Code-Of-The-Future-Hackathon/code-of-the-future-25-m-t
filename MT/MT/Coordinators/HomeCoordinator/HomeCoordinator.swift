@@ -56,7 +56,7 @@ class HomeCoordinator: Coordinator, ObservableObject {
     private func navigateToReportsList(currentRegion: MKCoordinateRegion, visibleHeightKm: Double) {
         hideTabBar = true
 
-        let viewModel = RepostsListViewModel(communication: communication, visibleHeightKm: visibleHeightKm, currentRegion: currentRegion, goBack: removeLastPath)
+        let viewModel = RepostsListViewModel(communication: communication, visibleHeightKm: visibleHeightKm, currentRegion: currentRegion, goBack: removeLastPath, openReportDetail: navigateToDetail)
 
         path.append(.reportsList(viewModel: viewModel))
     }

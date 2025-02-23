@@ -46,3 +46,11 @@ protocol UpdateIssueStatusCommunication {
 protocol ContinueAsGuestCommunication {
     func continueAsGuest() async throws -> Tokens
 }
+
+protocol GetAllActiveReportsCommunication {
+    func getActiveIssues() async throws -> [ReportResponse]
+}
+
+protocol GetAllResolvedReportsCommunication {
+    func getResolvedIssues() async throws -> [ReportResponse]
+}

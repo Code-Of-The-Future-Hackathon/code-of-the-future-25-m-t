@@ -29,6 +29,8 @@ extension Constants {
         case getCategories
         case reportAnIssue
         case getIssues
+        case getIssuesActive
+        case getIssuesResolved
         case updateIssueStatus
         case continueAsGuest
 
@@ -59,6 +61,10 @@ extension Constants.RequestEndpoint: URLConvertible {
             return Self.serverURL + "/issues/status"
         case .continueAsGuest:
             return Self.serverURL + "/auth/register-guest"
+        case .getIssuesActive:
+            return Self.serverURL + "/issues/active/self"
+        case .getIssuesResolved:
+            return Self.serverURL + "/issues/resolved/admin"
         }
     }
 }
@@ -68,7 +74,7 @@ extension Constants.RequestEndpoint: HTTPMethodConvertible {
         switch self {
         case .login, .registration, .googleAuth, .refreshToken, .reportAnIssue, .continueAsGuest:
             return .post
-        case .getMyProfile, .getCategories, .getIssues:
+        case .getMyProfile, .getCategories, .getIssues, .getIssuesActive, .getIssuesResolved:
             return .get
         case .pushToken, .updateIssueStatus:
             return .patch

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+typealias ProfileCoordinatorCommunication = GetAllActiveReportsCommunication & GetAllResolvedReportsCommunication & AuthMeCommunication
+
 class ProfileCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()
 
@@ -14,10 +16,15 @@ class ProfileCoordinator: Coordinator, ObservableObject {
     @Published var hideTabBar = false
 
     var initialDestination: ProfileDestination
+    var user: User
+    var communication: ProfileCoordinatorCommunication
+
     var logout: Event?
 
-    init() {
-        let profileViewModel = ProfileViewModel()
+    init(user: User, communication: ProfileCoordinatorCommunication) {
+        self.user = user
+        self.communication = communication
+        let profileViewModel = ProfileViewModel(communication: communication, user: user)
         initialDestination = .profile(viewModel: profileViewModel)
 
         profileViewModel.logoutClicked = { [weak self] in

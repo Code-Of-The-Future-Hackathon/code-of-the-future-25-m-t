@@ -2,7 +2,7 @@
 //  View.swift
 //  MT
 //
-//  Created by Ivan Gamov on 22.02.25.
+//  Created by Mihail Kolev on 23/02/2025.
 //
 
 import SwiftUI

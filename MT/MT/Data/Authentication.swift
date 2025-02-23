@@ -20,7 +20,10 @@ struct User: Codable, Identifiable {
     let googleId: String?
     let firstName: String?
     let lastName: String?
+    let title: String?
     let role: UserRole
+    let isGuest: Bool
+    let points: Int
     let createdAt: String
     let updatedAt: String
 }
