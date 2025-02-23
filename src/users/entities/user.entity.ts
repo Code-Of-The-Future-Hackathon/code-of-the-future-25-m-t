@@ -48,6 +48,12 @@ export class UserEntity {
   })
   googleId: string;
 
+  @Column({
+    unique: true,
+    nullable: true,
+  })
+  appleId: string;
+
   @Exclude()
   @Column({
     nullable: true,

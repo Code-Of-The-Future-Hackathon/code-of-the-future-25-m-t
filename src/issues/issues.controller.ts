@@ -17,10 +17,10 @@ import { JwtAuthGuard, RolesGuard } from 'src/auth/guards';
 import { RequestWithUser, UserRoles } from 'src/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Role } from 'src/auth/decorators';
+import { UserEntity } from 'src/users/entities';
 
 import { IssuesService } from './issues.service';
 import { ChangeStatusDto, CreateIssueDto, GetGroupsDto } from './dto';
-import { UserEntity } from 'src/users/entities';
 
 @ApiTags('Issues')
 @Controller('issues')
