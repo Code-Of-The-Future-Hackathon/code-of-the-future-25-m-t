@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GoogleSignIn
+import AuthenticationServices
 
 struct SignUpView: View {
     @StateObject var viewModel: SignUpViewModel
@@ -87,32 +88,21 @@ struct SignUpView: View {
     }
 
     private var appleButton: some View {
-        Button {
-            //TODO: Apple login
-        } label: {
-            HStack(spacing: 12) {
-                Spacer()
-
-                Image(systemName: "apple.logo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: 28)
-                    .foregroundStyle(.black.opacity(0.8))
-
-                TypographyText(text: "Sign up with Apple", typography: .body2)
-                    .foregroundStyle(Color(.label).opacity(0.9))
-                    .frame(height: 24)
-
-                Spacer()
+        SignInWithAppleButton(
+            onRequest: { request in
+                request.requestedScopes = [.fullName, .email]
+            },
+            onCompletion: { result in
+                switch result {
+                case .success(let authResults):
+                    handleAppleSignIn(authResults)
+                case .failure(let error):
+                    print("Sign in with Apple failed: \(error.localizedDescription)")
+                }
             }
-            .padding(8)
-            .frame(height: 48)
-            .overlay {
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color(.black).opacity(0.7), lineWidth: 1)
-            }
-            .contentShape(Rectangle())
-        }
+        )
+        .frame(height: 48)
+        .signInWithAppleButtonStyle(.black)
     }
 
     private var guestButton: some View {
@@ -150,6 +140,15 @@ struct SignUpView: View {
                 if let token = result.user.idToken?.tokenString {
                     viewModel.googleRegister(token: token)
                 }
+            }
+        }
+    }
+
+    func handleAppleSignIn(_ authResults: ASAuthorization) {
+        if let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential {
+            if let tokenData = appleIDCredential.identityToken,
+               let tokenString = String(data: tokenData, encoding: .utf8) {
+                viewModel.appleLogin(token: tokenString)
             }
         }
     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias SignInCommunication = LoginCommunication & AuthMeCommunication & GoogleAuthCommunication & ContinueAsGuestCommunication
+typealias SignInCommunication = LoginCommunication & AuthMeCommunication & GoogleAuthCommunication & ContinueAsGuestCommunication & AppleAuthCommunication
 
 class SignInViewModel: ObservableObject {
     @Published var email = ""
@@ -68,20 +68,20 @@ class SignInViewModel: ObservableObject {
         }
     }
 
-//    func appleLogin(token: String) {
-//        Task { @MainActor in
-//            do {
-//                let loginResponse = try await communication.appleAuth(token: token)
-//                userRepository.authToken = loginResponse
-//                let profileResponse = try await communication.getMyProfile()
-//                userRepository.user = profileResponse
-//                loginSuccessful?()
-//            } catch {
-//                didFailLogin = true
-//                requestErrorMessage = error.customErrorMessage("Could not login this user")
-//            }
-//        }
-//    }
+    func appleLogin(token: String) {
+        Task { @MainActor in
+            do {
+                let loginResponse = try await communication.appleAuth(token: token)
+                userRepository.authToken = loginResponse
+                let profileResponse = try await communication.getMyProfile()
+                userRepository.user = profileResponse
+                loginSuccessful?()
+            } catch {
+                didFailLogin = true
+                requestErrorMessage = error.customErrorMessage("Could not login this user")
+            }
+        }
+    }
 
     func verifyMendatoryFields() -> Bool {
         var areAllMendatoryFieldsChecked: Bool = false

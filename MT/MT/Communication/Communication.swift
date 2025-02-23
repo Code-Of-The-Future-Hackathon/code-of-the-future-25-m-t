@@ -58,3 +58,7 @@ protocol GetAllResolvedReportsCommunication {
 protocol GetTitleMappingsCommunication {
     func getTitleMappings() async throws -> [TitleMapping]
 }
+
+protocol AppleAuthCommunication {
+    func appleAuth(token: String) async throws -> Tokens
+}
