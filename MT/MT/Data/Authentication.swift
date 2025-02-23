@@ -24,7 +24,6 @@ struct User: Codable, Identifiable {
     let role: UserRole
     let isGuest: Bool
     let points: Int
-    let role: UserRole
     let createdAt: String
     let updatedAt: String
 }

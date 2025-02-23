@@ -77,7 +77,7 @@ struct ReportDetailView: View {
                         .tag(index)
                     }
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
 
                 HStack(spacing: 4) {
                     Spacer()

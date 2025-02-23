@@ -50,7 +50,7 @@ struct ProfileView: View {
 
                 Divider()
 
-                if viewModel.myUser.role == "user" {
+                if viewModel.myUser.role == .user {
                     TypographyText(text: "My reports" , typography: .mediumHeading)
                         .foregroundStyle(.black.opacity(0.8))
                     reportsListActive

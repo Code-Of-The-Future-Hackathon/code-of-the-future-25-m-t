@@ -37,7 +37,7 @@ class ProfileViewModel: ObservableObject {
     func getAllReports() {
         Task { @MainActor in
             do {
-                if myUser.role == "user" {
+                if myUser.role == .user {
                     let loadedReports = try await communication.getActiveIssues()
                     reportsActive = loadedReports
                 } else {
