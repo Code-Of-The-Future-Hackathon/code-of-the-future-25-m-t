@@ -40,9 +40,6 @@ struct SignUpView: View {
                     appleButton
                 }
                 
-                mediaIcons
-                    .padding(.bottom, 50)
-                
             }
             .padding(EdgeInsets(top: 16,
                                 leading: 24,
