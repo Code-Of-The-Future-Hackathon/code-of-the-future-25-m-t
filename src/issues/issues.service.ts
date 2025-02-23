@@ -267,7 +267,7 @@ export class IssuesService {
     if (dto.status === GroupStatusEnum.Resolved) {
       group.issues.forEach((issue) => {
         if (issue.user) {
-          void this.usersService.incrUserPoints(issue.user, 10);
+          void this.usersService.incrUserPoints(issue.user, 25);
         }
       });
     }

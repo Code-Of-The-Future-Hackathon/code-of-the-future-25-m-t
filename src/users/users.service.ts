@@ -199,13 +199,17 @@ export class UsersService {
 
   getTitleMappings() {
     return [
-      { points: 5000, title: 'Urban Legend' },
-      { points: 1000, title: 'City Guardian' },
-      { points: 500, title: 'Neighborhood Hero' },
-      { points: 250, title: 'Street Sentry' },
-      { points: 200, title: 'Pathfinder' },
-      { points: 100, title: 'Community Watcher' },
-      { points: 25, title: 'Local Reporter' },
+      { points: 1000, title: 'City Changemaker' },
+      { points: 900, title: 'Urban Champion' },
+      { points: 800, title: 'Watchdog' },
+      { points: 700, title: 'Metropolis Defender' },
+      { points: 600, title: 'City Guardian' },
+      { points: 500, title: 'Neighborhood Sentinel' },
+      { points: 400, title: 'Street Protector' },
+      { points: 300, title: 'Wayfinder' },
+      { points: 200, title: 'Community Observer' },
+      { points: 100, title: 'Local Reporter' },
+      { points: 0, title: 'Newcomer' },
     ].sort((a, b) => b.points - a.points);
   }
 
