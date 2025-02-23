@@ -16,6 +16,7 @@ class ReportDetailViewModel: ObservableObject {
         self.report = report
         self.communication = communication
         self.goBack = goBack
+        print("reportttt - \(report)")
     }
 
     func updateStatus() {

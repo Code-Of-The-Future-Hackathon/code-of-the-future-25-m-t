@@ -76,10 +76,12 @@ struct SignInView: View {
             .keyboardType(.emailAddress)
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
+            .textFieldStyle(RoundedBorderTextFieldStyle())
     }
 
     private var passwordField: some View {
         SecureField("Password", text: $viewModel.password)
+            .textFieldStyle(RoundedBorderTextFieldStyle())
     }
 
     private var resetPasswordText: some View {

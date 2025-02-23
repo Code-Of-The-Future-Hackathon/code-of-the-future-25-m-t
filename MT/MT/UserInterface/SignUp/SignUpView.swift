@@ -204,13 +204,16 @@ struct SignUpView: View {
             .keyboardType(.emailAddress)
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
+            .textFieldStyle(RoundedBorderTextFieldStyle())
     }
 
     private var passwordFields: some View {
         VStack(spacing: 24) {
             SecureField("Password", text: $viewModel.password)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
 
             SecureField("Repeat password", text: $viewModel.confirmPassword)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
         }
     }
 

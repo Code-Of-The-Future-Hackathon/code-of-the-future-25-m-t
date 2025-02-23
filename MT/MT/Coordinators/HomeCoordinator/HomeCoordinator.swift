@@ -62,7 +62,9 @@ class HomeCoordinator: Coordinator, ObservableObject {
     }
 
     func removeLastPath() {
-        path.removeLast()
+        if !path.isEmpty {
+            path.removeLast()
+        }
         if path.isEmpty {
             hideTabBar = false
         }

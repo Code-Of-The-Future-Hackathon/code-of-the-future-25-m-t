@@ -25,6 +25,7 @@ struct ReportResponse: Codable, Identifiable {
     let distance: Double?
     let issues: [Issue]?
     let status: ReportStatus?
+    let costEstimates: [CostEstimate]?
 
     struct ReportType: Codable {
         let id: Int
@@ -47,6 +48,17 @@ struct ReportResponse: Codable, Identifiable {
             return ""
         }
     }
+}
+
+struct CostEstimate: Codable, Identifiable {
+    var id: String {
+        shortIssueName
+    }
+    let currency: String
+    let laborCost: Double
+    let totalCost: Double
+    let materialsCost: Double
+    let shortIssueName: String
 }
 
 struct Issue: Codable {
