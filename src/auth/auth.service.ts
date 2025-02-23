@@ -10,6 +10,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import ms from 'ms';
 import { nanoid } from 'nanoid';
+import axios from 'axios';
+import jwkToPem from 'jwk-to-pem';
+import * as jwt from 'jsonwebtoken';
 
 import { AuthErrorCodes } from './errors';
 import { RegisterDto } from './dtos';
@@ -17,6 +20,8 @@ import { SessionEntity } from './entities';
 
 @Injectable()
 export class AuthService {
+  private APPLE_KEYS_URL = 'https://appleid.apple.com/auth/keys';
+
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
@@ -168,5 +173,63 @@ export class AuthService {
       console.error(e);
       throw new BadRequestException(AuthErrorCodes.GoogleTokenInvalidError);
     }
+  }
+
+  async appleLoginOrCreateProfile(user: UserEntity) {
+    if (!user) {
+      throw new BadRequestException(UserErrorCodes.UserNotFoundError);
+    }
+
+    const databaseUser = await this.usersService.findOneByAppleIdOrEmail(
+      user.id,
+      user.email,
+    );
+
+    if (databaseUser) {
+      await this.usersService.updateAppleUser(
+        databaseUser.id,
+        user.id,
+        user.email,
+      );
+
+      return this.login(databaseUser);
+    }
+
+    const newUser = await this.usersService.createAppleUser(
+      user.email,
+      user.id,
+    );
+
+    return this.login(newUser);
+  }
+
+  async getApplePublicKeys() {
+    const response = await axios.get(this.APPLE_KEYS_URL);
+    return response.data.keys;
+  }
+
+  async appleLogin(identityToken: string): Promise<any> {
+    const decodedHeader = jwt.decode(identityToken, { complete: true });
+    if (!decodedHeader || typeof decodedHeader === 'string') {
+      throw new Error('Invalid token header');
+    }
+    const { kid } = decodedHeader.header;
+
+    const keys = await this.getApplePublicKeys();
+    const appleKey = keys.find((key: { kid: string }) => key.kid === kid);
+    if (!appleKey) {
+      throw new BadRequestException(AuthErrorCodes.AppleTokenInvalidError);
+    }
+
+    const pem = jwkToPem(appleKey);
+
+    const payload = jwt.verify(identityToken, pem, {
+      algorithms: ['RS256'],
+    }) as any;
+
+    return await this.appleLoginOrCreateProfile({
+      id: payload.sub,
+      email: payload.email,
+    } as UserEntity);
   }
 }

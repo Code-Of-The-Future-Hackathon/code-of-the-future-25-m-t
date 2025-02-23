@@ -12,7 +12,7 @@ import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { GoogleOAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './guards';
 import {
-  GoogleTokenDto,
+  AuthTokenDto,
   LoginDto,
   RegisterDto,
   RequestWithSession,
@@ -42,7 +42,7 @@ export class AuthController {
   }
 
   @Post('google-token-login')
-  async googleTokenLogin(@Body() dto: GoogleTokenDto) {
+  async googleTokenLogin(@Body() dto: AuthTokenDto) {
     return await this.authService.googleTokenLogin(dto.token);
   }
 
@@ -61,5 +61,10 @@ export class AuthController {
   @UseGuards(GoogleOAuthGuard)
   async googleAuthRedirect(@Request() req: RequestWithUser) {
     return await this.authService.googleLoginOrCreateProfile(req.user);
+  }
+
+  @Post('apple-login')
+  async appleLogin(@Body() dto: AuthTokenDto) {
+    return await this.authService.appleLogin(dto.token);
   }
 }

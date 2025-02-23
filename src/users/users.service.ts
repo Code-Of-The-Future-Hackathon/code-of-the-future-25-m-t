@@ -70,6 +70,22 @@ export class UsersService {
     return await this.usersRepository.save(user);
   }
 
+  async createAppleUser(email: string, appleId: string) {
+    if (await this.checkEmail(email)) {
+      throw new BadRequestException(
+        UserErrorCodes.UserWithThisEmailAlreadyCreatedError,
+      );
+    }
+
+    const user = this.usersRepository.create({
+      email,
+      appleId,
+      title: this.mapUserTitle(0),
+    });
+
+    return await this.usersRepository.save(user);
+  }
+
   async findOne(id: string) {
     return await this.usersRepository.findOne({
       where: {
@@ -113,9 +129,23 @@ export class UsersService {
       .getOne();
   }
 
+  async findOneByAppleIdOrEmail(appleId: string, email: string) {
+    return await this.usersRepository
+      .createQueryBuilder()
+      .where('"appleId" = :appleId OR email = :email', { appleId, email })
+      .getOne();
+  }
+
   async updateGoogleUser(userId: string, googleId: string, email: string) {
     return await this.usersRepository.update(userId, {
       googleId,
+      email,
+    });
+  }
+
+  async updateAppleUser(userId: string, appleId: string, email: string) {
+    return await this.usersRepository.update(userId, {
+      appleId,
       email,
     });
   }
