@@ -134,7 +134,6 @@ struct ReportDetailView: View {
             
             Spacer()
         }
-//        .padding()
     }
 
     var title: some View {

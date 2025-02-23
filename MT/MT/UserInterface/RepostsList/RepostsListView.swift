@@ -41,10 +41,6 @@ struct RepostsListView: View {
                     .foregroundStyle(.black.opacity(0.8))
             }
             .padding(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
-//            .background(
-//                RoundedRectangle(cornerRadius: 30)
-//                    .foregroundColor(.gray.opacity(0.3))
-//            )
         }
     }
 
@@ -91,7 +87,7 @@ struct RepostsListView: View {
 
     var reportsList: some View {
         ZStack {
-            Color.clear.ignoresSafeArea() // Ensures full transparency
+            Color.clear.ignoresSafeArea()
 
             List {
                 ForEach(viewModel.reports) { report in

@@ -45,31 +45,31 @@ struct AchievementsView: View {
                 VStack(alignment: .center, spacing: 16) {
                     title
                     pointsSection
-                }
-                
+                }.padding(.bottom, 20)
+
                 ForEach(viewModel.stepTitles.indices, id: \.self) { index in
                     HStack {
                         Circle()
                             .strokeBorder(index <= viewModel.completedSteps ? Color.teal : Color.gray, lineWidth: 2)
                             .background(Circle().fill(index <= viewModel.completedSteps ? Color.teal : Color.clear))
                             .frame(width: 20, height: 20)
-                        
-                        TypographyText(text: "\(viewModel.stepTitles[index]) - \(viewModel.pointsPerStep*index)", typography: .body)
+
+                        TypographyText(text: "\(viewModel.stepTitles[index]) - \(viewModel.pointsPerStep * index)", typography: .body)
                             .font(.body)
                             .foregroundColor(index <= viewModel.completedSteps ? .teal : .gray)
-                        
+
                         Spacer()
                     }
-                    
-                    if index <= viewModel.totalSteps  {
+
+                    if index < viewModel.totalSteps - 1 {
                         ZStack(alignment: .top) {
                             Rectangle()
                                 .frame(width: 2, height: 50)
                                 .foregroundColor(index < viewModel.completedSteps ? .teal : .gray)
                                 .padding(.leading, 9)
                                 .padding(.vertical, -2)
-                            
-                            if index == viewModel.completedSteps  {
+
+                            if index == viewModel.completedSteps {
                                 Rectangle()
                                     .frame(width: 2, height: 50 * viewModel.progressPercentage, alignment: .top)
                                     .foregroundColor(.teal)
@@ -79,7 +79,7 @@ struct AchievementsView: View {
                         }
                     }
                 }
-                
+
                 Spacer()
             }
         }
@@ -89,7 +89,3 @@ struct AchievementsView: View {
         .scrollIndicators(.hidden)
     }
 }
-
-//#Preview {
-//    AchievementsView(viewModel: AchievementsViewModel(communication: <#any AchievementsCommunication#>, currentPoints: 230, goBack: {}))
-//}

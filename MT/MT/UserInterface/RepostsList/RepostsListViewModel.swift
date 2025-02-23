@@ -46,7 +46,6 @@ class RepostsListViewModel: ObservableObject {
                                                                                                 radius: visibleHeightKm * 1000))
 
                 reports = loadedReports
-                print("### Loaded reports: \(loadedReports)")
             } catch { }
         }
     }

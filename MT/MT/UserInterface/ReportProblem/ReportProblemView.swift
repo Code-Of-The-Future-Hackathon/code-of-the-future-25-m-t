@@ -112,7 +112,6 @@ struct ReportProblemView: View {
                     .disabled(viewModel.isSubmitDisabled)
                 }
             }
-//            .background(Color.white.ignoresSafeArea())
         }
         .sheet(isPresented: $viewModel.isShowingCamera) {
             CameraView(image: $viewModel.image)
@@ -127,6 +126,3 @@ struct ReportProblemView: View {
     }
 }
 
-// #Preview {
-//    ReportProblemView(viewModel: ReportProblemViewModel(communication: <#any ReportIssueCommunication#>, issueType: IssueType(id: 1, title: "Test"), goBack: {}))
-// }

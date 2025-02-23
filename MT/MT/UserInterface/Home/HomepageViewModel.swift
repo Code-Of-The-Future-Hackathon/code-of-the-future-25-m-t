@@ -48,10 +48,8 @@ class HomepageViewModel: ObservableObject {
         
         if let category = categories.first(where: { $0.types?.contains(where: { $0.id == issueType.id }) ?? false }) {
             let supportsImages = category.supportsImages
-            print("🚀 Reporting Issue in Category \(issueType.title) - supportsImages: \(supportsImages)")
             openReportProblem?(issueType, supportsImages, coordinate.latitude, coordinate.longitude, myAddress.isEmpty ? nil : myAddress)
         } else {
-            print("🚀 Reporting Issue in Category \(issueType.title) - Category not found, defaulting supportsImages to true")
             openReportProblem?(issueType, true, coordinate.latitude, coordinate.longitude, myAddress.isEmpty ? nil : myAddress)
         }
     }
@@ -202,8 +200,6 @@ class HomepageViewModel: ObservableObject {
                 pointers = loadedReports
                 print("### Loaded reports: \(loadedReports)")
             } catch {
-//                didFailFetchingCategories = true
-//                requestErrorMessage = error.customErrorMessage("Could not fetch categories.")
             }
         }
     }

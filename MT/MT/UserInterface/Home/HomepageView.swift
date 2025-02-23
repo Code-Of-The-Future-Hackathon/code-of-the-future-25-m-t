@@ -126,7 +126,3 @@ struct HomepageView: View {
         }
     }
 }
-
-//#Preview {
-//    HomepageView(viewModel: HomepageViewModel(communication: MockCategoriesCommunication()))
-//}
