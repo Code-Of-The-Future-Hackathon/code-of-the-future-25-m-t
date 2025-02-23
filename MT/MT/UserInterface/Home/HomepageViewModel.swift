@@ -9,7 +9,7 @@ import CoreLocation
 import MapKit
 import SwiftUI
 
-typealias ReportProblemEvent = (IssueType, Double, Double, String?) -> Void?
+typealias ReportProblemEvent = (IssueType, Bool, Double, Double, String?) -> Void?
 typealias ReportsListEvent = (MKCoordinateRegion, Double) -> Void?
 
 class HomepageViewModel: ObservableObject {
@@ -34,15 +34,38 @@ class HomepageViewModel: ObservableObject {
     var openReportDetail: ReportResponseEvent?
     var openReportsList: ReportsListEvent?
 
+    @Published var categories: [Category] = []
+
     init(communication: HomeCommunication) {
         self.communication = communication
 
         fetchCurrentLocation()
+        loadCategories()
     }
 
     func reportIssue(issueType: IssueType) {
         guard let coordinate = locationManager.location?.coordinate else { return }
-        openReportProblem?(issueType, coordinate.latitude, coordinate.longitude, myAddress.isEmpty ? nil : myAddress)
+        
+        if let category = categories.first(where: { $0.types?.contains(where: { $0.id == issueType.id }) ?? false }) {
+            let supportsImages = category.supportsImages
+            print("🚀 Reporting Issue in Category \(issueType.title) - supportsImages: \(supportsImages)")
+            openReportProblem?(issueType, supportsImages, coordinate.latitude, coordinate.longitude, myAddress.isEmpty ? nil : myAddress)
+        } else {
+            print("🚀 Reporting Issue in Category \(issueType.title) - Category not found, defaulting supportsImages to true")
+            openReportProblem?(issueType, true, coordinate.latitude, coordinate.longitude, myAddress.isEmpty ? nil : myAddress)
+        }
+    }
+
+    private func loadCategories() {
+        Task { @MainActor in
+            do {
+                let loadedCategories = try await communication.loadCategories()
+
+                categories = loadedCategories
+            } catch {
+                print("Error loading categories: \(error.localizedDescription)")
+            }
+        }
     }
 
     func fetchCurrentLocation() {
@@ -183,7 +206,6 @@ class HomepageViewModel: ObservableObject {
 //                requestErrorMessage = error.customErrorMessage("Could not fetch categories.")
             }
         }
-
     }
 }
 

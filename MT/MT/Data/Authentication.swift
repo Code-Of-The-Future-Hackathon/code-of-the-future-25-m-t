@@ -9,6 +9,11 @@ import Foundation
 
 struct EmptyResponse: Codable { }
 
+enum UserRole: String, Codable {
+    case user = "user"
+    case admin = "admin"
+}
+
 struct User: Codable, Identifiable {
     let id: String
     let email: String
@@ -16,9 +21,10 @@ struct User: Codable, Identifiable {
     let firstName: String?
     let lastName: String?
     let title: String?
-    let role: String
+    let role: UserRole
     let isGuest: Bool
     let points: Int
+    let role: UserRole
     let createdAt: String
     let updatedAt: String
 }

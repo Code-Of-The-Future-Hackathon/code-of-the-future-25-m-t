@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-typealias HomeCommunication = CategoriesCommunication & ReportIssueCommunication & GetAllReportsCommunication
+typealias HomeCommunication = CategoriesCommunication & ReportIssueCommunication & GetAllReportsCommunication & UpdateIssueStatusCommunication
 
 class HomeCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()
@@ -39,15 +39,16 @@ class HomeCoordinator: Coordinator, ObservableObject {
         AnyView(HomeCoordinatorView(coordinator: self))
     }
 
-    private func navigateToReport(issueType: IssueType, lat: Double, lon: Double, address: String? = nil) {
-        hideTabBar = true
-        print("✅ Processing SINGLE report for: \(issueType.title) | ID: \(issueType.id)")
+    private func navigateToReport(issueType: IssueType, supportsImages: Bool, lat: Double, lon: Double, address: String? = nil) {
+        withAnimation {
+            hideTabBar = true
+        }
 
-        path.append(.reportProblem(viewModel: ReportProblemViewModel(communication: communication, lattitude: lat, longitude: lon, address: address, issueType: issueType, goBack: removeLastPath)))
+        path.append(.reportProblem(viewModel: ReportProblemViewModel(communication: communication, lattitude: lat, longitude: lon, address: address, issueType: issueType, supportsImages: supportsImages, goBack: removeLastPath)))
     }
 
     private func navigateToDetail(report: ReportResponse) {
-        let detailVM = ReportDetailViewModel(report: report, goBack: removeLastPath)
+        let detailVM = ReportDetailViewModel(report: report, communication: communication, goBack: removeLastPath)
         path.append(.reportDetail(viewModel: detailVM))
 
     }
