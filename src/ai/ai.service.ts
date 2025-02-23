@@ -29,7 +29,7 @@ export class AiService {
       messages: [
         {
           role: 'system',
-          content: `I am a city official in Bulgaria. I want you to compile a list of FIVE potential causes for this type of issue based on the report of citizens based on types: ${type.category.title} - ${type.title}. For each potential cause provide an estimate of the cost of materials and labor to fix the issue. The cost should be in Bulgarian leva. Make sure that shortIssueName is a user-friendly name for the issue in Bulgarian.`,
+          content: `I am a city official in Bulgaria. I want you to compile a list of FIVE potential causes for this type of issue based on the report of citizens based on types: ${type.category.title} - ${type.title}. For each potential cause provide an estimate of the cost of materials and labor to fix the issue. The cost should be in Bulgarian leva. Make sure that shortIssueName is a user-friendly name for the issue in English only.`,
         },
         {
           role: 'user',

@@ -128,6 +128,7 @@ export class IssuesService {
       lat: issue.lat,
       lon: issue.lon,
       radius: 10,
+      categoryId: type.category.id,
     });
     if (groups.length) {
       groups.forEach((group) => {
