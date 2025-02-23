@@ -35,7 +35,7 @@ struct ProfileView: View {
                             .foregroundStyle(.black.opacity(0.8))
                     }
                     Spacer()
-                    Button(action: { }) {
+                    Button(action: { viewModel.navigateToAchievements?() }) {
                         Image(systemName: "arrow.forward")
                             .resizable()
                             .aspectRatio(contentMode: .fit)

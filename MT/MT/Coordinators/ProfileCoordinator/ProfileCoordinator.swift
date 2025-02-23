@@ -8,6 +8,7 @@
 import SwiftUI
 
 typealias ProfileCoordinatorCommunication = GetAllActiveReportsCommunication & GetAllResolvedReportsCommunication & AuthMeCommunication
+    & GetTitleMappingsCommunication
 
 class ProfileCoordinator: Coordinator, ObservableObject {
     var childCoordinators = [Coordinator]()
@@ -27,6 +28,9 @@ class ProfileCoordinator: Coordinator, ObservableObject {
         let profileViewModel = ProfileViewModel(communication: communication, user: user)
         initialDestination = .profile(viewModel: profileViewModel)
 
+        profileViewModel.navigateToAchievements = { [weak self] in
+            self?.navigateToAchievements()
+        }
         profileViewModel.logoutClicked = { [weak self] in
             self?.logout?()
         }
@@ -35,6 +39,13 @@ class ProfileCoordinator: Coordinator, ObservableObject {
     @ViewBuilder
     func start() -> AnyView {
         AnyView(ProfileCoordinatorView(coordinator: self))
+    }
+
+    private func navigateToAchievements() {
+        let achievementVM = AchievementsViewModel(communication: communication, goBack: removeLastPath)
+        
+        path.append(.achievements(viewModel: achievementVM))
+
     }
 
     func removeLastPath() {

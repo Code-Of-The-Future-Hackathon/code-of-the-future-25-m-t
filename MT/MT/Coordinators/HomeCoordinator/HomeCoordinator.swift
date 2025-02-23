@@ -50,7 +50,6 @@ class HomeCoordinator: Coordinator, ObservableObject {
     private func navigateToDetail(report: ReportResponse) {
         let detailVM = ReportDetailViewModel(report: report, communication: communication, goBack: removeLastPath)
         path.append(.reportDetail(viewModel: detailVM))
-
     }
 
     private func navigateToReportsList(currentRegion: MKCoordinateRegion, visibleHeightKm: Double) {
